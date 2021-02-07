@@ -10,8 +10,15 @@ using System.Security.Cryptography;
 
 namespace libWiiSharp
 {
-  public class Ticket : IDisposable
-  {
+
+    public enum CommonKeyType : byte
+    {
+        Standard = 0x00,
+        Korean = 0x01,
+    }
+
+    public class Ticket : IDisposable
+    {
     private byte newKeyIndex;
     private byte[] decryptedTitleKey = new byte[16];
     private bool fakeSign;

@@ -13,7 +13,16 @@ using System.Text;
 
 namespace libWiiSharp
 {
-  public class WAD : IDisposable
+    public enum LowerTitleID : uint
+    {
+        SystemTitles = 0x00000001,
+        SystemChannels = 0x00010002,
+        Channel = 0x00010001,
+        GameChannel = 0x00010004,
+        DLC = 0x00010005,
+        HiddenChannels = 0x00010008,
+    }
+    public class WAD : IDisposable
   {
     private SHA1 sha = SHA1.Create();
     private DateTime creationTimeUTC = new DateTime(1970, 1, 1);
@@ -999,4 +1008,38 @@ namespace libWiiSharp
 
     private void bannerApp_Warning(object sender, MessageEventArgs e) => this.fireWarning(e.Message);
   }
+
+    public class WAD_Header
+    {
+        private uint headerSize = 0x20;
+        private uint wadType = 0x49730000;
+        private uint certSize = 0xA00;
+        private uint reserved = 0x00;
+        private uint tikSize = 0x2A4;
+        private uint tmdSize;
+        private uint contentSize;
+        private uint footerSize = 0x00;
+
+        public uint HeaderSize { get { return headerSize; } }
+        public uint WadType { get { return wadType; } set { wadType = value; } }
+        public uint CertSize { get { return certSize; } }
+        public uint Reserved { get { return reserved; } }
+        public uint TicketSize { get { return tikSize; } }
+        public uint TmdSize { get { return tmdSize; } set { tmdSize = value; } }
+        public uint ContentSize { get { return contentSize; } set { contentSize = value; } }
+        public uint FooterSize { get { return footerSize; } set { footerSize = value; } }
+
+        public void Write(Stream writeStream)
+        {
+            writeStream.Seek(0, SeekOrigin.Begin);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(headerSize)), 0, 4);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(wadType)), 0, 4);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(certSize)), 0, 4);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(reserved)), 0, 4);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(tikSize)), 0, 4);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(tmdSize)), 0, 4);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(contentSize)), 0, 4);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(footerSize)), 0, 4);
+        }
+    }
 }

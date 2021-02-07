@@ -11,7 +11,13 @@ using System.Security.Cryptography;
 
 namespace libWiiSharp
 {
-  public class TMD : IDisposable
+    public enum ContentType : ushort
+    {
+        Normal = 1,
+        DLC = 16385, // 0x4001
+        Shared = 32769, // 0x8001
+    }
+    public class TMD : IDisposable
   {
     private bool fakeSign;
     private bool sortContents;

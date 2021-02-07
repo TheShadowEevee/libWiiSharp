@@ -55,18 +55,14 @@
     <Compile Include="CertificateChain.cs" />
     <Compile Include="ColorIndexConverter.cs" />
     <Compile Include="CommonKey.cs" />
-    <Compile Include="CommonKeyType.cs" />
     <Compile Include="ContentIndices.cs" />
-    <Compile Include="ContentType.cs" />
     <Compile Include="HbcTransmitter.cs" />
     <Compile Include="Headers.cs" />
     <Compile Include="HexView.cs" />
     <Compile Include="IosPatcher.cs" />
-    <Compile Include="LowerTitleID.cs" />
     <Compile Include="Lz77.cs" />
     <Compile Include="MessageEventArgs.cs" />
     <Compile Include="NusClient.cs" />
-    <Compile Include="Protocol.cs" />
     <Compile Include="Region.cs" />
     <Compile Include="Shared.cs" />
     <Compile Include="StoreType.cs" />
@@ -85,14 +81,12 @@
     <Compile Include="U8_Node.cs" />
     <Compile Include="U8_NodeType.cs" />
     <Compile Include="WAD.cs" />
-    <Compile Include="WAD_Header.cs" />
     <Compile Include="Wave.cs" />
     <Compile Include="WaveDataChunk.cs" />
     <Compile Include="WaveFmtChunk.cs" />
     <Compile Include="WaveHeader.cs" />
     <Compile Include="WaveSmplChunk.cs" />
     <Compile Include="WaveSmplLoop.cs" />
-    <Compile Include="zlibWrapper.cs" />
     <Compile Include="AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
