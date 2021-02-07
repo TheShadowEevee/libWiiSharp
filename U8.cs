@@ -25,6 +25,12 @@ using System.Text;
 
 namespace libWiiSharp
 {
+    public enum U8_NodeType : ushort
+    {
+        File = 0,
+        Directory = 256, // 0x0100
+    }
+
     public class U8 : IDisposable
     {
         //private const int dataPadding = 32;
@@ -962,4 +968,81 @@ namespace libWiiSharp
             progress(new object(), new ProgressChangedEventArgs(progressPercentage, string.Empty));
         }
     }
+
+    public class U8_Header
+    {
+        private readonly uint u8Magic = 1437218861;
+        private readonly uint offsetToRootNode = 32;
+        private uint headerSize;
+        private uint offsetToData;
+        private readonly byte[] padding = new byte[16];
+
+        public uint U8Magic => u8Magic;
+
+        public uint OffsetToRootNode => offsetToRootNode;
+
+        public uint HeaderSize
+        {
+            get => headerSize;
+            set => headerSize = value;
+        }
+
+        public uint OffsetToData
+        {
+            get => offsetToData;
+            set => offsetToData = value;
+        }
+
+        public byte[] Padding => padding;
+
+        public void Write(Stream writeStream)
+        {
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(u8Magic)), 0, 4);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(offsetToRootNode)), 0, 4);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(headerSize)), 0, 4);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(offsetToData)), 0, 4);
+            writeStream.Write(padding, 0, 16);
+        }
+    }
+
+    public class U8_Node
+    {
+        private ushort type;
+        private ushort offsetToName;
+        private uint offsetToData;
+        private uint sizeOfData;
+
+        public U8_NodeType Type
+        {
+            get => (U8_NodeType)type;
+            set => type = (ushort)value;
+        }
+
+        public ushort OffsetToName
+        {
+            get => offsetToName;
+            set => offsetToName = value;
+        }
+
+        public uint OffsetToData
+        {
+            get => offsetToData;
+            set => offsetToData = value;
+        }
+
+        public uint SizeOfData
+        {
+            get => sizeOfData;
+            set => sizeOfData = value;
+        }
+
+        public void Write(Stream writeStream)
+        {
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(type)), 0, 2);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(offsetToName)), 0, 2);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(offsetToData)), 0, 4);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(sizeOfData)), 0, 4);
+        }
+    }
+
 }

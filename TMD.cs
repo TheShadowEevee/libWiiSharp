@@ -23,6 +23,15 @@ using System.Security.Cryptography;
 
 namespace libWiiSharp
 {
+
+    public enum Region : ushort
+    {
+        Japan,
+        USA,
+        Europe,
+        Free,
+    }
+
     public enum ContentType : ushort
     {
         Normal = 1,
@@ -598,4 +607,44 @@ namespace libWiiSharp
             debug(new object(), new MessageEventArgs(string.Format(debugMessage, args)));
         }
     }
+
+    public class TMD_Content
+    {
+        private uint contentId;
+        private ushort index;
+        private ushort type;
+        private ulong size;
+        private byte[] hash = new byte[20];
+
+        public uint ContentID
+        {
+            get => contentId;
+            set => contentId = value;
+        }
+
+        public ushort Index
+        {
+            get => index;
+            set => index = value;
+        }
+
+        public ContentType Type
+        {
+            get => (ContentType)type;
+            set => type = (ushort)value;
+        }
+
+        public ulong Size
+        {
+            get => size;
+            set => size = value;
+        }
+
+        public byte[] Hash
+        {
+            get => hash;
+            set => hash = value;
+        }
+    }
+
 }

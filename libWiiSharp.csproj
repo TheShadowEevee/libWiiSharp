@@ -47,13 +47,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BNS.cs" />
-    <Compile Include="BNS_Data.cs" />
-    <Compile Include="BNS_Header.cs" />
-    <Compile Include="BNS_Info.cs" />
     <Compile Include="Brlan.cs" />
     <Compile Include="Brlyt.cs" />
     <Compile Include="CertificateChain.cs" />
-    <Compile Include="ColorIndexConverter.cs" />
     <Compile Include="CommonKey.cs" />
     <Compile Include="ContentIndices.cs" />
     <Compile Include="HbcTransmitter.cs" />
@@ -63,30 +59,14 @@
     <Compile Include="Lz77.cs" />
     <Compile Include="MessageEventArgs.cs" />
     <Compile Include="NusClient.cs" />
-    <Compile Include="Region.cs" />
     <Compile Include="Shared.cs" />
     <Compile Include="StoreType.cs" />
     <Compile Include="Ticket.cs" />
     <Compile Include="TMD.cs" />
-    <Compile Include="TMD_Content.cs" />
     <Compile Include="TPL.cs" />
-    <Compile Include="TPL_Header.cs" />
-    <Compile Include="TPL_PaletteFormat.cs" />
-    <Compile Include="TPL_PaletteHeader.cs" />
-    <Compile Include="TPL_TextureEntry.cs" />
-    <Compile Include="TPL_TextureFormat.cs" />
-    <Compile Include="TPL_TextureHeader.cs" />
     <Compile Include="U8.cs" />
-    <Compile Include="U8_Header.cs" />
-    <Compile Include="U8_Node.cs" />
-    <Compile Include="U8_NodeType.cs" />
     <Compile Include="WAD.cs" />
     <Compile Include="Wave.cs" />
-    <Compile Include="WaveDataChunk.cs" />
-    <Compile Include="WaveFmtChunk.cs" />
-    <Compile Include="WaveHeader.cs" />
-    <Compile Include="WaveSmplChunk.cs" />
-    <Compile Include="WaveSmplLoop.cs" />
     <Compile Include="AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
