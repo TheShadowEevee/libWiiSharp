@@ -1,4 +1,4 @@
-﻿#libWiiSharp
+# libWiiSharp
 
 libWiiSharp is a Wii related .NET (2.0+) library.
 It can be used with any .NET language to easily develop Wii related applications.
@@ -16,7 +16,7 @@ If you want to contribute, you can do so at [the github repo](https://github.com
 libWiiSharp is released under the terms of the GNU General Public License v3.
 See the LICENSE file for more info
 
-##Credits
+## Credits
 From the original libWiiSharp:
 	- Xuzz, SquidMan, megazig, Matt_P, Omega and The Lemon Man for Wii.py
 	- megazig for his bns conversion code (bns.py)
