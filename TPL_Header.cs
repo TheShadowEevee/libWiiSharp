@@ -9,27 +9,27 @@ using System.IO;
 
 namespace libWiiSharp
 {
-  public class TPL_Header
-  {
-    private uint tplMagic = 2142000;
-    private uint numOfTextures;
-    private uint headerSize = 12;
-
-    public uint TplMagic => this.tplMagic;
-
-    public uint NumOfTextures
+    public class TPL_Header
     {
-      get => this.numOfTextures;
-      set => this.numOfTextures = value;
-    }
+        private readonly uint tplMagic = 2142000;
+        private uint numOfTextures;
+        private readonly uint headerSize = 12;
 
-    public uint HeaderSize => this.headerSize;
+        public uint TplMagic => tplMagic;
 
-    public void Write(Stream writeStream)
-    {
-      writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.tplMagic)), 0, 4);
-      writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.numOfTextures)), 0, 4);
-      writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.headerSize)), 0, 4);
+        public uint NumOfTextures
+        {
+            get => numOfTextures;
+            set => numOfTextures = value;
+        }
+
+        public uint HeaderSize => headerSize;
+
+        public void Write(Stream writeStream)
+        {
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(tplMagic)), 0, 4);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(numOfTextures)), 0, 4);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(headerSize)), 0, 4);
+        }
     }
-  }
 }

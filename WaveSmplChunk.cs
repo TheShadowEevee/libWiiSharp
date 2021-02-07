@@ -10,79 +10,81 @@ using System.IO;
 
 namespace libWiiSharp
 {
-  internal class WaveSmplChunk
-  {
-    private uint smplId = 1936552044;
-    private uint smplSize = 36;
-    private uint manufacturer;
-    private uint product;
-    private uint samplePeriod;
-    private uint unityNote = 60;
-    private uint pitchFraction;
-    private uint smpteFormat;
-    private uint smpteOffset;
-    private uint numLoops;
-    private uint samplerData;
-    private List<WaveSmplLoop> smplLoops = new List<WaveSmplLoop>();
-
-    public uint SmplSize => this.smplSize;
-
-    public uint NumLoops => this.numLoops;
-
-    public WaveSmplLoop[] Loops => this.smplLoops.ToArray();
-
-    public void AddLoop(int loopStartSample, int loopEndSample)
+    internal class WaveSmplChunk
     {
-      this.RemoveAllLoops();
-      ++this.numLoops;
-      this.smplLoops.Add(new WaveSmplLoop()
-      {
-        LoopStart = (uint) loopStartSample,
-        LoopEnd = (uint) loopEndSample
-      });
-    }
+        private readonly uint smplId = 1936552044;
+        private uint smplSize = 36;
+        private uint manufacturer;
+        private uint product;
+        private uint samplePeriod;
+        private uint unityNote = 60;
+        private uint pitchFraction;
+        private uint smpteFormat;
+        private uint smpteOffset;
+        private uint numLoops;
+        private uint samplerData;
+        private readonly List<WaveSmplLoop> smplLoops = new List<WaveSmplLoop>();
 
-    public void RemoveAllLoops()
-    {
-      this.smplLoops.Clear();
-      this.numLoops = 0U;
-    }
+        public uint SmplSize => smplSize;
 
-    public void Write(BinaryWriter writer)
-    {
-      writer.Write(Shared.Swap(this.smplId));
-      writer.Write(this.smplSize);
-      writer.Write(this.manufacturer);
-      writer.Write(this.product);
-      writer.Write(this.samplePeriod);
-      writer.Write(this.unityNote);
-      writer.Write(this.pitchFraction);
-      writer.Write(this.smpteFormat);
-      writer.Write(this.smpteOffset);
-      writer.Write(this.numLoops);
-      writer.Write(this.samplerData);
-      for (int index = 0; (long) index < (long) this.numLoops; ++index)
-        this.smplLoops[index].Write(writer);
-    }
+        public uint NumLoops => numLoops;
 
-    public void Read(BinaryReader reader)
-    {
-      this.smplSize = (int) Shared.Swap(reader.ReadUInt32()) == (int) this.smplId ? reader.ReadUInt32() : throw new Exception("Wrong chunk ID!");
-      this.manufacturer = reader.ReadUInt32();
-      this.product = reader.ReadUInt32();
-      this.samplePeriod = reader.ReadUInt32();
-      this.unityNote = reader.ReadUInt32();
-      this.pitchFraction = reader.ReadUInt32();
-      this.smpteFormat = reader.ReadUInt32();
-      this.smpteOffset = reader.ReadUInt32();
-      this.numLoops = reader.ReadUInt32();
-      this.samplerData = reader.ReadUInt32();
-      for (int index = 0; (long) index < (long) this.numLoops; ++index)
-      {
-        WaveSmplLoop waveSmplLoop = new WaveSmplLoop();
-        waveSmplLoop.Read(reader);
-        this.smplLoops.Add(waveSmplLoop);
-      }
+        public WaveSmplLoop[] Loops => smplLoops.ToArray();
+
+        public void AddLoop(int loopStartSample, int loopEndSample)
+        {
+            RemoveAllLoops();
+            ++numLoops;
+            smplLoops.Add(new WaveSmplLoop()
+            {
+                LoopStart = (uint)loopStartSample,
+                LoopEnd = (uint)loopEndSample
+            });
+        }
+
+        public void RemoveAllLoops()
+        {
+            smplLoops.Clear();
+            numLoops = 0U;
+        }
+
+        public void Write(BinaryWriter writer)
+        {
+            writer.Write(Shared.Swap(smplId));
+            writer.Write(smplSize);
+            writer.Write(manufacturer);
+            writer.Write(product);
+            writer.Write(samplePeriod);
+            writer.Write(unityNote);
+            writer.Write(pitchFraction);
+            writer.Write(smpteFormat);
+            writer.Write(smpteOffset);
+            writer.Write(numLoops);
+            writer.Write(samplerData);
+            for (int index = 0; index < numLoops; ++index)
+            {
+                smplLoops[index].Write(writer);
+            }
+        }
+
+        public void Read(BinaryReader reader)
+        {
+            smplSize = (int)Shared.Swap(reader.ReadUInt32()) == (int)smplId ? reader.ReadUInt32() : throw new Exception("Wrong chunk ID!");
+            manufacturer = reader.ReadUInt32();
+            product = reader.ReadUInt32();
+            samplePeriod = reader.ReadUInt32();
+            unityNote = reader.ReadUInt32();
+            pitchFraction = reader.ReadUInt32();
+            smpteFormat = reader.ReadUInt32();
+            smpteOffset = reader.ReadUInt32();
+            numLoops = reader.ReadUInt32();
+            samplerData = reader.ReadUInt32();
+            for (int index = 0; index < numLoops; ++index)
+            {
+                WaveSmplLoop waveSmplLoop = new WaveSmplLoop();
+                waveSmplLoop.Read(reader);
+                smplLoops.Add(waveSmplLoop);
+            }
+        }
     }
-  }
 }

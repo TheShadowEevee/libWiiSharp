@@ -24,17 +24,29 @@ namespace libWiiSharp
 {
     public class Brlyt
     {
-        public static string[] GetBrlytTpls(string pathToBrlyt) => Brlyt.getBrlytTpls(File.ReadAllBytes(pathToBrlyt));
+        public static string[] GetBrlytTpls(string pathToBrlyt)
+        {
+            return PrivGetBrlytTpls(File.ReadAllBytes(pathToBrlyt));
+        }
 
-        public static string[] GetBrlytTpls(byte[] brlytFile) => Brlyt.getBrlytTpls(brlytFile);
+        public static string[] GetBrlytTpls(byte[] brlytFile)
+        {
+            return PrivGetBrlytTpls(brlytFile);
+        }
 
         public static string[] GetBrlytTpls(WAD wad, bool banner)
         {
             if (!wad.HasBanner)
+            {
                 return new string[0];
-            string str = nameof (banner);
+            }
+
+            string str = nameof(banner);
             if (!banner)
+            {
                 str = "icon";
+            }
+
             for (int index1 = 0; index1 < wad.BannerApp.Nodes.Count; ++index1)
             {
                 if (wad.BannerApp.StringTable[index1].ToLower() == str + ".bin")
@@ -44,7 +56,9 @@ namespace libWiiSharp
                     for (int index2 = 0; index2 < u8.Nodes.Count; ++index2)
                     {
                         if (u8.StringTable[index2].ToLower() == str + ".brlyt")
-                            a = Shared.MergeStringArrays(a, Brlyt.getBrlytTpls(u8.Data[index2]));
+                        {
+                            a = Shared.MergeStringArrays(a, Brlyt.GetBrlytTpls(u8.Data[index2]));
+                        }
                     }
                     return a;
                 }
@@ -52,27 +66,35 @@ namespace libWiiSharp
             return new string[0];
         }
 
-        private static string[] getBrlytTpls(byte[] brlytFile)
+        private static string[] PrivGetBrlytTpls(byte[] brlytFile)
         {
             List<string> stringList = new List<string>();
-            int numOfTpls = Brlyt.getNumOfTpls(brlytFile);
+            int numOfTpls = Brlyt.GetNumOfTpls(brlytFile);
             int index1 = 48 + numOfTpls * 8;
             for (int index2 = 0; index2 < numOfTpls; ++index2)
             {
                 string empty = string.Empty;
-                while (brlytFile[index1] != (byte) 0)
+                while (brlytFile[index1] != 0)
+                {
                     empty += Convert.ToChar(brlytFile[index1++]).ToString();
+                }
+
                 stringList.Add(empty);
                 ++index1;
             }
             for (int index2 = stringList.Count - 1; index2 >= 0; --index2)
             {
                 if (!stringList[index2].ToLower().EndsWith(".tpl"))
+                {
                     stringList.RemoveAt(index2);
+                }
             }
             return stringList.ToArray();
         }
 
-        private static int getNumOfTpls(byte[] brlytFile) => (int) Shared.Swap(BitConverter.ToUInt16(brlytFile, 44));
+        private static int GetNumOfTpls(byte[] brlytFile)
+        {
+            return Shared.Swap(BitConverter.ToUInt16(brlytFile, 44));
+        }
     }
 }

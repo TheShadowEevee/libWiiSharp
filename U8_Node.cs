@@ -9,43 +9,43 @@ using System.IO;
 
 namespace libWiiSharp
 {
-  public class U8_Node
-  {
-    private ushort type;
-    private ushort offsetToName;
-    private uint offsetToData;
-    private uint sizeOfData;
-
-    public U8_NodeType Type
+    public class U8_Node
     {
-      get => (U8_NodeType) this.type;
-      set => this.type = (ushort) value;
-    }
+        private ushort type;
+        private ushort offsetToName;
+        private uint offsetToData;
+        private uint sizeOfData;
 
-    public ushort OffsetToName
-    {
-      get => this.offsetToName;
-      set => this.offsetToName = value;
-    }
+        public U8_NodeType Type
+        {
+            get => (U8_NodeType)type;
+            set => type = (ushort)value;
+        }
 
-    public uint OffsetToData
-    {
-      get => this.offsetToData;
-      set => this.offsetToData = value;
-    }
+        public ushort OffsetToName
+        {
+            get => offsetToName;
+            set => offsetToName = value;
+        }
 
-    public uint SizeOfData
-    {
-      get => this.sizeOfData;
-      set => this.sizeOfData = value;
-    }
+        public uint OffsetToData
+        {
+            get => offsetToData;
+            set => offsetToData = value;
+        }
 
-    public void Write(Stream writeStream)
-    {
-      writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.type)), 0, 2);
-      writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.offsetToName)), 0, 2);
-      writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.offsetToData)), 0, 4);
-      writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.sizeOfData)), 0, 4);
+        public uint SizeOfData
+        {
+            get => sizeOfData;
+            set => sizeOfData = value;
+        }
+
+        public void Write(Stream writeStream)
+        {
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(type)), 0, 2);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(offsetToName)), 0, 2);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(offsetToData)), 0, 4);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(sizeOfData)), 0, 4);
+        }
     }
-  }
 }

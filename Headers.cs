@@ -24,8 +24,8 @@ namespace libWiiSharp
 {
     public class Headers
     {
-        private static uint imd5Magic = 1229800501;
-        private static uint imetMagic = 1229800788;
+        private static readonly uint imd5Magic = 1229800501;
+        private static readonly uint imetMagic = 1229800788;
 
         /// <summary>
         /// Convert HeaderType to int to get it's Length.
@@ -53,7 +53,10 @@ namespace libWiiSharp
         /// </summary>
         /// <param name="pathToFile"></param>
         /// <returns></returns>
-        public static Headers.HeaderType DetectHeader(string pathToFile) => Headers.DetectHeader(File.ReadAllBytes(pathToFile));
+        public static Headers.HeaderType DetectHeader(string pathToFile)
+        {
+            return Headers.DetectHeader(File.ReadAllBytes(pathToFile));
+        }
 
         /// <summary>
         /// Checks the byte array for Headers.
@@ -62,11 +65,17 @@ namespace libWiiSharp
         /// <returns></returns>
         public static Headers.HeaderType DetectHeader(byte[] file)
         {
-            if (file.Length > 68 && (int) Shared.Swap(BitConverter.ToUInt32(file, 64)) == (int) Headers.imetMagic)
+            if (file.Length > 68 && (int)Shared.Swap(BitConverter.ToUInt32(file, 64)) == (int)Headers.imetMagic)
+            {
                 return Headers.HeaderType.ShortIMET;
-            if (file.Length > 132 && (int) Shared.Swap(BitConverter.ToUInt32(file, 128)) == (int) Headers.imetMagic)
+            }
+
+            if (file.Length > 132 && (int)Shared.Swap(BitConverter.ToUInt32(file, 128)) == (int)Headers.imetMagic)
+            {
                 return Headers.HeaderType.IMET;
-            return file.Length > 4 && (int) Shared.Swap(BitConverter.ToUInt32(file, 0)) == (int) Headers.imd5Magic ? Headers.HeaderType.IMD5 : Headers.HeaderType.None;
+            }
+
+            return file.Length > 4 && (int)Shared.Swap(BitConverter.ToUInt32(file, 0)) == (int)Headers.imd5Magic ? Headers.HeaderType.IMD5 : Headers.HeaderType.None;
         }
 
         /// <summary>
@@ -81,22 +90,28 @@ namespace libWiiSharp
             {
                 file.Seek(64L, SeekOrigin.Begin);
                 file.Read(buffer, 0, buffer.Length);
-                if ((int) Shared.Swap(BitConverter.ToUInt32(buffer, 0)) == (int) Headers.imetMagic)
+                if ((int)Shared.Swap(BitConverter.ToUInt32(buffer, 0)) == (int)Headers.imetMagic)
+                {
                     return Headers.HeaderType.ShortIMET;
+                }
             }
             if (file.Length > 132L)
             {
                 file.Seek(128L, SeekOrigin.Begin);
                 file.Read(buffer, 0, buffer.Length);
-                if ((int) Shared.Swap(BitConverter.ToUInt32(buffer, 0)) == (int) Headers.imetMagic)
+                if ((int)Shared.Swap(BitConverter.ToUInt32(buffer, 0)) == (int)Headers.imetMagic)
+                {
                     return Headers.HeaderType.IMET;
+                }
             }
             if (file.Length > 4L)
             {
                 file.Seek(0L, SeekOrigin.Begin);
                 file.Read(buffer, 0, buffer.Length);
-                if ((int) Shared.Swap(BitConverter.ToUInt32(buffer, 0)) == (int) Headers.imd5Magic)
+                if ((int)Shared.Swap(BitConverter.ToUInt32(buffer, 0)) == (int)Headers.imd5Magic)
+                {
                     return Headers.HeaderType.IMD5;
+                }
             }
             return Headers.HeaderType.None;
         }
@@ -106,10 +121,10 @@ namespace libWiiSharp
         {
             private bool hashesMatch = true;
             private bool isShortImet;
-            private byte[] additionalPadding = new byte[64];
-            private byte[] padding = new byte[64];
-            private uint imetMagic = 1229800788;
-            private uint sizeOfHeader = 1536;
+            private readonly byte[] additionalPadding = new byte[64];
+            private readonly byte[] padding = new byte[64];
+            private readonly uint imetMagic = 1229800788;
+            private readonly uint sizeOfHeader = 1536;
             private uint unknown = 3;
             private uint iconSize;
             private uint bannerSize;
@@ -122,10 +137,10 @@ namespace libWiiSharp
             private byte[] spanishTitle = new byte[84];
             private byte[] italianTitle = new byte[84];
             private byte[] dutchTitle = new byte[84];
-            private byte[] unknownTitle1 = new byte[84];
-            private byte[] unknownTitle2 = new byte[84];
+            private readonly byte[] unknownTitle1 = new byte[84];
+            private readonly byte[] unknownTitle2 = new byte[84];
             private byte[] koreanTitle = new byte[84];
-            private byte[] padding2 = new byte[588];
+            private readonly byte[] padding2 = new byte[588];
             private byte[] hash = new byte[16];
 
             /// <summary>
@@ -133,8 +148,8 @@ namespace libWiiSharp
             /// </summary>
             public bool IsShortIMET
             {
-                get => this.isShortImet;
-                set => this.isShortImet = value;
+                get => isShortImet;
+                set => isShortImet = value;
             }
 
             /// <summary>
@@ -142,8 +157,8 @@ namespace libWiiSharp
             /// </summary>
             public uint IconSize
             {
-                get => this.iconSize;
-                set => this.iconSize = value;
+                get => iconSize;
+                set => iconSize = value;
             }
 
             /// <summary>
@@ -151,8 +166,8 @@ namespace libWiiSharp
             /// </summary>
             public uint BannerSize
             {
-                get => this.bannerSize;
-                set => this.bannerSize = value;
+                get => bannerSize;
+                set => bannerSize = value;
             }
 
             /// <summary>
@@ -160,8 +175,8 @@ namespace libWiiSharp
             /// </summary>
             public uint SoundSize
             {
-                get => this.soundSize;
-                set => this.soundSize = value;
+                get => soundSize;
+                set => soundSize = value;
             }
 
             /// <summary>
@@ -169,8 +184,8 @@ namespace libWiiSharp
             /// </summary>
             public string JapaneseTitle
             {
-                get => this.returnTitleAsString(this.japaneseTitle);
-                set => this.setTitleFromString(value, 0);
+                get => ReturnTitleAsString(japaneseTitle);
+                set => SetTitleFromString(value, 0);
             }
 
             /// <summary>
@@ -178,8 +193,8 @@ namespace libWiiSharp
             /// </summary>
             public string EnglishTitle
             {
-                get => this.returnTitleAsString(this.englishTitle);
-                set => this.setTitleFromString(value, 1);
+                get => ReturnTitleAsString(englishTitle);
+                set => SetTitleFromString(value, 1);
             }
 
             /// <summary>
@@ -187,8 +202,8 @@ namespace libWiiSharp
             /// </summary>
             public string GermanTitle
             {
-                get => this.returnTitleAsString(this.germanTitle);
-                set => this.setTitleFromString(value, 2);
+                get => ReturnTitleAsString(germanTitle);
+                set => SetTitleFromString(value, 2);
             }
 
             /// <summary>
@@ -196,8 +211,8 @@ namespace libWiiSharp
             /// </summary>
             public string FrenchTitle
             {
-                get => this.returnTitleAsString(this.frenchTitle);
-                set => this.setTitleFromString(value, 3);
+                get => ReturnTitleAsString(frenchTitle);
+                set => SetTitleFromString(value, 3);
             }
 
             /// <summary>
@@ -205,8 +220,8 @@ namespace libWiiSharp
             /// </summary>
             public string SpanishTitle
             {
-                get => this.returnTitleAsString(this.spanishTitle);
-                set => this.setTitleFromString(value, 4);
+                get => ReturnTitleAsString(spanishTitle);
+                set => SetTitleFromString(value, 4);
             }
 
             /// <summary>
@@ -214,8 +229,8 @@ namespace libWiiSharp
             /// </summary>
             public string ItalianTitle
             {
-                get => this.returnTitleAsString(this.italianTitle);
-                set => this.setTitleFromString(value, 5);
+                get => ReturnTitleAsString(italianTitle);
+                set => SetTitleFromString(value, 5);
             }
 
             /// <summary>
@@ -223,8 +238,8 @@ namespace libWiiSharp
             /// </summary>
             public string DutchTitle
             {
-                get => this.returnTitleAsString(this.dutchTitle);
-                set => this.setTitleFromString(value, 6);
+                get => ReturnTitleAsString(dutchTitle);
+                set => SetTitleFromString(value, 6);
             }
 
             /// <summary>
@@ -232,8 +247,8 @@ namespace libWiiSharp
             /// </summary>
             public string KoreanTitle
             {
-                get => this.returnTitleAsString(this.koreanTitle);
-                set => this.setTitleFromString(value, 7);
+                get => ReturnTitleAsString(koreanTitle);
+                set => SetTitleFromString(value, 7);
             }
 
             /// <summary>
@@ -241,20 +256,20 @@ namespace libWiiSharp
             /// </summary>
             public string[] AllTitles => new string[8]
             {
-                this.JapaneseTitle,
-                this.EnglishTitle,
-                this.GermanTitle,
-                this.FrenchTitle,
-                this.SpanishTitle,
-                this.ItalianTitle,
-                this.DutchTitle,
-                this.KoreanTitle
+                JapaneseTitle,
+                EnglishTitle,
+                GermanTitle,
+                FrenchTitle,
+                SpanishTitle,
+                ItalianTitle,
+                DutchTitle,
+                KoreanTitle
             };
 
             /// <summary>
             /// When parsing an IMET header, this value will turn false if the hash stored in the header doesn't match the headers hash.
             /// </summary>
-            public bool HashesMatch => this.hashesMatch;
+            public bool HashesMatch => hashesMatch;
 
             #region Public Functions
             /// <summary>
@@ -262,7 +277,10 @@ namespace libWiiSharp
             /// </summary>
             /// <param name="pathToFile"></param>
             /// <returns></returns>
-            public static Headers.IMET Load(string pathToFile) => Headers.IMET.Load(File.ReadAllBytes(pathToFile));
+            public static Headers.IMET Load(string pathToFile)
+            {
+                return Headers.IMET.Load(File.ReadAllBytes(pathToFile));
+            }
 
             /// <summary>
             /// Loads the IMET Header of a byte array.
@@ -278,11 +296,14 @@ namespace libWiiSharp
                     case Headers.HeaderType.IMET:
                         Headers.IMET imet = new Headers.IMET();
                         if (headerType == Headers.HeaderType.ShortIMET)
+                        {
                             imet.isShortImet = true;
+                        }
+
                         MemoryStream memoryStream = new MemoryStream(fileOrHeader);
                         try
                         {
-                            imet.parseHeader((Stream) memoryStream);
+                            imet.ParseHeader(memoryStream);
                         }
                         catch
                         {
@@ -310,8 +331,11 @@ namespace libWiiSharp
                     case Headers.HeaderType.IMET:
                         Headers.IMET imet = new Headers.IMET();
                         if (headerType == Headers.HeaderType.ShortIMET)
+                        {
                             imet.isShortImet = true;
-                        imet.parseHeader(fileOrHeader);
+                        }
+
+                        imet.ParseHeader(fileOrHeader);
                         return imet;
                     default:
                         throw new Exception("No IMET Header found!");
@@ -334,15 +358,23 @@ namespace libWiiSharp
                 int soundSize,
                 params string[] titles)
             {
-                Headers.IMET imet = new Headers.IMET();
-                imet.isShortImet = isShortImet;
+                Headers.IMET imet = new Headers.IMET
+                {
+                    isShortImet = isShortImet
+                };
                 for (int titleIndex = 0; titleIndex < titles.Length; ++titleIndex)
-                    imet.setTitleFromString(titles[titleIndex], titleIndex);
+                {
+                    imet.SetTitleFromString(titles[titleIndex], titleIndex);
+                }
+
                 for (int length = titles.Length; length < 8; ++length)
-                    imet.setTitleFromString(titles.Length > 1 ? titles[1] : titles[0], length);
-                imet.iconSize = (uint) iconSize;
-                imet.bannerSize = (uint) bannerSize;
-                imet.soundSize = (uint) soundSize;
+                {
+                    imet.SetTitleFromString(titles.Length > 1 ? titles[1] : titles[0], length);
+                }
+
+                imet.iconSize = (uint)iconSize;
+                imet.bannerSize = (uint)bannerSize;
+                imet.soundSize = (uint)soundSize;
                 return imet;
             }
 
@@ -367,13 +399,13 @@ namespace libWiiSharp
                 Headers.HeaderType headerType = Headers.DetectHeader(file);
                 switch (headerType)
                 {
-                case Headers.HeaderType.ShortIMET:
-                case Headers.HeaderType.IMET:
-                    byte[] numArray = new byte[(int) (file.Length - headerType)];
-                    Array.Copy((Array) file, (int) headerType, (Array) numArray, 0, numArray.Length);
-                    return numArray;
-                default:
-                    throw new Exception("No IMET Header found!");
+                    case Headers.HeaderType.ShortIMET:
+                    case Headers.HeaderType.IMET:
+                        byte[] numArray = new byte[(int)(file.Length - headerType)];
+                        Array.Copy(file, (int)headerType, numArray, 0, numArray.Length);
+                        return numArray;
+                    default:
+                        throw new Exception("No IMET Header found!");
                 }
             }
 
@@ -384,7 +416,9 @@ namespace libWiiSharp
             public void SetAllTitles(string newTitle)
             {
                 for (int titleIndex = 0; titleIndex < 10; ++titleIndex)
-                    this.setTitleFromString(newTitle, titleIndex);
+                {
+                    SetTitleFromString(newTitle, titleIndex);
+                }
             }
 
             /// <summary>
@@ -396,7 +430,7 @@ namespace libWiiSharp
                 MemoryStream memoryStream = new MemoryStream();
                 try
                 {
-                    this.writeToStream((Stream) memoryStream);
+                    WriteToStream(memoryStream);
                     return memoryStream;
                 }
                 catch
@@ -410,13 +444,19 @@ namespace libWiiSharp
             /// Returns the Header as a byte array.
             /// </summary>
             /// <returns></returns>
-            public byte[] ToByteArray() => this.ToMemoryStream().ToArray();
+            public byte[] ToByteArray()
+            {
+                return ToMemoryStream().ToArray();
+            }
 
             /// <summary>
             /// Writes the Header to the given stream.
             /// </summary>
             /// <param name="writeStream"></param>
-            public void Write(Stream writeStream) => this.writeToStream(writeStream);
+            public void Write(Stream writeStream)
+            {
+                WriteToStream(writeStream);
+            }
 
             /// <summary>
             /// Changes the Titles.
@@ -425,105 +465,125 @@ namespace libWiiSharp
             public void ChangeTitles(params string[] newTitles)
             {
                 for (int titleIndex = 0; titleIndex < newTitles.Length; ++titleIndex)
-                    this.setTitleFromString(newTitles[titleIndex], titleIndex);
+                {
+                    SetTitleFromString(newTitles[titleIndex], titleIndex);
+                }
+
                 for (int length = newTitles.Length; length < 8; ++length)
-                    this.setTitleFromString(newTitles.Length > 1 ? newTitles[1] : newTitles[0], length);
+                {
+                    SetTitleFromString(newTitles.Length > 1 ? newTitles[1] : newTitles[0], length);
+                }
             }
 
             /// <summary>
             /// Returns a string array with the Titles.
             /// </summary>
             /// <returns></returns>
-            public string[] GetTitles() => new string[8]
+            public string[] GetTitles()
             {
-                this.JapaneseTitle,
-                this.EnglishTitle,
-                this.GermanTitle,
-                this.FrenchTitle,
-                this.SpanishTitle,
-                this.ItalianTitle,
-                this.DutchTitle,
-                this.KoreanTitle
-            };
+                return new string[8]
+{
+                JapaneseTitle,
+                EnglishTitle,
+                GermanTitle,
+                FrenchTitle,
+                SpanishTitle,
+                ItalianTitle,
+                DutchTitle,
+                KoreanTitle
+};
+            }
             #endregion
 
             #region Private Functions
-            private void writeToStream(Stream writeStream)
+            private void WriteToStream(Stream writeStream)
             {
                 writeStream.Seek(0L, SeekOrigin.Begin);
-                if (!this.isShortImet)
-                    writeStream.Write(this.additionalPadding, 0, this.additionalPadding.Length);
-                writeStream.Write(this.padding, 0, this.padding.Length);
-                writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.imetMagic)), 0, 4);
-                writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.sizeOfHeader)), 0, 4);
-                writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.unknown)), 0, 4);
-                writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.iconSize)), 0, 4);
-                writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.bannerSize)), 0, 4);
-                writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.soundSize)), 0, 4);
-                writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.flags)), 0, 4);
-                writeStream.Write(this.japaneseTitle, 0, this.japaneseTitle.Length);
-                writeStream.Write(this.englishTitle, 0, this.englishTitle.Length);
-                writeStream.Write(this.germanTitle, 0, this.germanTitle.Length);
-                writeStream.Write(this.frenchTitle, 0, this.frenchTitle.Length);
-                writeStream.Write(this.spanishTitle, 0, this.spanishTitle.Length);
-                writeStream.Write(this.italianTitle, 0, this.italianTitle.Length);
-                writeStream.Write(this.dutchTitle, 0, this.dutchTitle.Length);
-                writeStream.Write(this.unknownTitle1, 0, this.unknownTitle1.Length);
-                writeStream.Write(this.unknownTitle2, 0, this.unknownTitle2.Length);
-                writeStream.Write(this.koreanTitle, 0, this.koreanTitle.Length);
-                writeStream.Write(this.padding2, 0, this.padding2.Length);
-                int position = (int) writeStream.Position;
-                this.hash = new byte[16];
-                writeStream.Write(this.hash, 0, this.hash.Length);
+                if (!isShortImet)
+                {
+                    writeStream.Write(additionalPadding, 0, additionalPadding.Length);
+                }
+
+                writeStream.Write(padding, 0, padding.Length);
+                writeStream.Write(BitConverter.GetBytes(Shared.Swap(imetMagic)), 0, 4);
+                writeStream.Write(BitConverter.GetBytes(Shared.Swap(sizeOfHeader)), 0, 4);
+                writeStream.Write(BitConverter.GetBytes(Shared.Swap(unknown)), 0, 4);
+                writeStream.Write(BitConverter.GetBytes(Shared.Swap(iconSize)), 0, 4);
+                writeStream.Write(BitConverter.GetBytes(Shared.Swap(bannerSize)), 0, 4);
+                writeStream.Write(BitConverter.GetBytes(Shared.Swap(soundSize)), 0, 4);
+                writeStream.Write(BitConverter.GetBytes(Shared.Swap(flags)), 0, 4);
+                writeStream.Write(japaneseTitle, 0, japaneseTitle.Length);
+                writeStream.Write(englishTitle, 0, englishTitle.Length);
+                writeStream.Write(germanTitle, 0, germanTitle.Length);
+                writeStream.Write(frenchTitle, 0, frenchTitle.Length);
+                writeStream.Write(spanishTitle, 0, spanishTitle.Length);
+                writeStream.Write(italianTitle, 0, italianTitle.Length);
+                writeStream.Write(dutchTitle, 0, dutchTitle.Length);
+                writeStream.Write(unknownTitle1, 0, unknownTitle1.Length);
+                writeStream.Write(unknownTitle2, 0, unknownTitle2.Length);
+                writeStream.Write(koreanTitle, 0, koreanTitle.Length);
+                writeStream.Write(padding2, 0, padding2.Length);
+                int position = (int)writeStream.Position;
+                hash = new byte[16];
+                writeStream.Write(hash, 0, hash.Length);
                 byte[] numArray = new byte[writeStream.Position];
                 writeStream.Seek(0L, SeekOrigin.Begin);
                 writeStream.Read(numArray, 0, numArray.Length);
-                this.computeHash(numArray, !this.isShortImet ? 64 : 0);
-                writeStream.Seek((long) position, SeekOrigin.Begin);
-                writeStream.Write(this.hash, 0, this.hash.Length);
+                ComputeHash(numArray, !isShortImet ? 64 : 0);
+                writeStream.Seek(position, SeekOrigin.Begin);
+                writeStream.Write(hash, 0, hash.Length);
             }
 
-            private void computeHash(byte[] headerBytes, int hashPos)
+            private void ComputeHash(byte[] headerBytes, int hashPos)
             {
                 MD5 md5 = MD5.Create();
-                this.hash = md5.ComputeHash(headerBytes, hashPos, 1536);
+                hash = md5.ComputeHash(headerBytes, hashPos, 1536);
                 md5.Clear();
             }
 
-            private void parseHeader(Stream headerStream)
+            private void ParseHeader(Stream headerStream)
             {
                 headerStream.Seek(0L, SeekOrigin.Begin);
                 byte[] buffer1 = new byte[4];
-                if (!this.isShortImet)
-                    headerStream.Read(this.additionalPadding, 0, this.additionalPadding.Length);
-                headerStream.Read(this.padding, 0, this.padding.Length);
+                if (!isShortImet)
+                {
+                    headerStream.Read(additionalPadding, 0, additionalPadding.Length);
+                }
+
+                headerStream.Read(padding, 0, padding.Length);
                 headerStream.Read(buffer1, 0, 4);
-                if ((int) Shared.Swap(BitConverter.ToUInt32(buffer1, 0)) != (int) this.imetMagic)
+                if ((int)Shared.Swap(BitConverter.ToUInt32(buffer1, 0)) != (int)imetMagic)
+                {
                     throw new Exception("Invalid Magic!");
+                }
+
                 headerStream.Read(buffer1, 0, 4);
-                if ((int) Shared.Swap(BitConverter.ToUInt32(buffer1, 0)) != (int) this.sizeOfHeader)
+                if ((int)Shared.Swap(BitConverter.ToUInt32(buffer1, 0)) != (int)sizeOfHeader)
+                {
                     throw new Exception("Invalid Header Size!");
+                }
+
                 headerStream.Read(buffer1, 0, 4);
-                this.unknown = Shared.Swap(BitConverter.ToUInt32(buffer1, 0));
+                unknown = Shared.Swap(BitConverter.ToUInt32(buffer1, 0));
                 headerStream.Read(buffer1, 0, 4);
-                this.iconSize = Shared.Swap(BitConverter.ToUInt32(buffer1, 0));
+                iconSize = Shared.Swap(BitConverter.ToUInt32(buffer1, 0));
                 headerStream.Read(buffer1, 0, 4);
-                this.bannerSize = Shared.Swap(BitConverter.ToUInt32(buffer1, 0));
+                bannerSize = Shared.Swap(BitConverter.ToUInt32(buffer1, 0));
                 headerStream.Read(buffer1, 0, 4);
-                this.soundSize = Shared.Swap(BitConverter.ToUInt32(buffer1, 0));
+                soundSize = Shared.Swap(BitConverter.ToUInt32(buffer1, 0));
                 headerStream.Read(buffer1, 0, 4);
-                this.flags = Shared.Swap(BitConverter.ToUInt32(buffer1, 0));
-                headerStream.Read(this.japaneseTitle, 0, this.japaneseTitle.Length);
-                headerStream.Read(this.englishTitle, 0, this.englishTitle.Length);
-                headerStream.Read(this.germanTitle, 0, this.germanTitle.Length);
-                headerStream.Read(this.frenchTitle, 0, this.frenchTitle.Length);
-                headerStream.Read(this.spanishTitle, 0, this.spanishTitle.Length);
-                headerStream.Read(this.italianTitle, 0, this.italianTitle.Length);
-                headerStream.Read(this.dutchTitle, 0, this.dutchTitle.Length);
-                headerStream.Read(this.unknownTitle1, 0, this.unknownTitle1.Length);
-                headerStream.Read(this.unknownTitle2, 0, this.unknownTitle2.Length);
-                headerStream.Read(this.koreanTitle, 0, this.koreanTitle.Length);
-                headerStream.Read(this.padding2, 0, this.padding2.Length);
+                flags = Shared.Swap(BitConverter.ToUInt32(buffer1, 0));
+                headerStream.Read(japaneseTitle, 0, japaneseTitle.Length);
+                headerStream.Read(englishTitle, 0, englishTitle.Length);
+                headerStream.Read(germanTitle, 0, germanTitle.Length);
+                headerStream.Read(frenchTitle, 0, frenchTitle.Length);
+                headerStream.Read(spanishTitle, 0, spanishTitle.Length);
+                headerStream.Read(italianTitle, 0, italianTitle.Length);
+                headerStream.Read(dutchTitle, 0, dutchTitle.Length);
+                headerStream.Read(unknownTitle1, 0, unknownTitle1.Length);
+                headerStream.Read(unknownTitle2, 0, unknownTitle2.Length);
+                headerStream.Read(koreanTitle, 0, koreanTitle.Length);
+                headerStream.Read(padding2, 0, padding2.Length);
                 headerStream.Read(this.hash, 0, this.hash.Length);
                 headerStream.Seek(-16L, SeekOrigin.Current);
                 headerStream.Write(new byte[16], 0, 16);
@@ -531,12 +591,12 @@ namespace libWiiSharp
                 headerStream.Seek(0L, SeekOrigin.Begin);
                 headerStream.Read(buffer2, 0, buffer2.Length);
                 MD5 md5 = MD5.Create();
-                byte[] hash = md5.ComputeHash(buffer2, !this.isShortImet ? 64 : 0, 1536);
+                byte[] hash = md5.ComputeHash(buffer2, !isShortImet ? 64 : 0, 1536);
                 md5.Clear();
-                this.hashesMatch = Shared.CompareByteArrays(hash, this.hash);
+                hashesMatch = Shared.CompareByteArrays(hash, this.hash);
             }
 
-            private string returnTitleAsString(byte[] title)
+            private string ReturnTitleAsString(byte[] title)
             {
                 string empty = string.Empty;
                 for (int index = 0; index < 84; index += 2)
@@ -547,12 +607,14 @@ namespace libWiiSharp
                         title[index]
                     }, 0);
                     if (ch != char.MinValue)
-                    empty += ch.ToString();
+                    {
+                        empty += ch.ToString();
+                    }
                 }
                 return empty;
             }
 
-            private void setTitleFromString(string title, int titleIndex)
+            private void SetTitleFromString(string title, int titleIndex)
             {
                 byte[] numArray = new byte[84];
                 for (int index = 0; index < title.Length; ++index)
@@ -564,28 +626,28 @@ namespace libWiiSharp
                 switch (titleIndex)
                 {
                     case 0:
-                        this.japaneseTitle = numArray;
+                        japaneseTitle = numArray;
                         break;
                     case 1:
-                        this.englishTitle = numArray;
+                        englishTitle = numArray;
                         break;
                     case 2:
-                        this.germanTitle = numArray;
+                        germanTitle = numArray;
                         break;
                     case 3:
-                        this.frenchTitle = numArray;
+                        frenchTitle = numArray;
                         break;
                     case 4:
-                        this.spanishTitle = numArray;
+                        spanishTitle = numArray;
                         break;
                     case 5:
-                        this.italianTitle = numArray;
+                        italianTitle = numArray;
                         break;
                     case 6:
-                        this.dutchTitle = numArray;
+                        dutchTitle = numArray;
                         break;
                     case 7:
-                        this.koreanTitle = numArray;
+                        koreanTitle = numArray;
                         break;
                 }
             }
@@ -594,24 +656,24 @@ namespace libWiiSharp
 
         public class IMD5
         {
-            private uint imd5Magic = 1229800501;
+            private readonly uint imd5Magic = 1229800501;
             private uint fileSize;
-            private byte[] padding = new byte[8];
+            private readonly byte[] padding = new byte[8];
             private byte[] hash = new byte[16];
 
             /// <summary>
             /// The size of the file without the IMD5 Header.
             /// </summary>
-            public uint FileSize => this.fileSize;
+            public uint FileSize => fileSize;
 
             /// <summary>
             /// The hash of the file without the IMD5 Header.
             /// </summary>
-            public byte[] Hash => this.hash;
+            public byte[] Hash => hash;
 
-        private IMD5()
-        {
-        }
+            private IMD5()
+            {
+            }
 
             #region Public Functions
             /// <summary>
@@ -619,7 +681,10 @@ namespace libWiiSharp
             /// </summary>
             /// <param name="pathToFile"></param>
             /// <returns></returns>
-            public static Headers.IMD5 Load(string pathToFile) => Headers.IMD5.Load(File.ReadAllBytes(pathToFile));
+            public static Headers.IMD5 Load(string pathToFile)
+            {
+                return Headers.IMD5.Load(File.ReadAllBytes(pathToFile));
+            }
 
             /// <summary>
             /// Loads the IMD5 Header of a byte array.
@@ -629,12 +694,15 @@ namespace libWiiSharp
             public static Headers.IMD5 Load(byte[] fileOrHeader)
             {
                 if (Headers.DetectHeader(fileOrHeader) != Headers.HeaderType.IMD5)
+                {
                     throw new Exception("No IMD5 Header found!");
+                }
+
                 Headers.IMD5 imD5 = new Headers.IMD5();
                 MemoryStream memoryStream = new MemoryStream(fileOrHeader);
                 try
                 {
-                    imD5.parseHeader((Stream) memoryStream);
+                    imD5.ParseHeader(memoryStream);
                 }
                 catch
                 {
@@ -653,9 +721,12 @@ namespace libWiiSharp
             public static Headers.IMD5 Load(Stream fileOrHeader)
             {
                 if (Headers.DetectHeader(fileOrHeader) != Headers.HeaderType.IMD5)
+                {
                     throw new Exception("No IMD5 Header found!");
+                }
+
                 Headers.IMD5 imD5 = new Headers.IMD5();
-                imD5.parseHeader(fileOrHeader);
+                imD5.ParseHeader(fileOrHeader);
                 return imD5;
             }
 
@@ -666,9 +737,11 @@ namespace libWiiSharp
             /// <returns></returns>
             public static Headers.IMD5 Create(byte[] file)
             {
-                Headers.IMD5 imD5 = new Headers.IMD5();
-                imD5.fileSize = (uint) file.Length;
-                imD5.computeHash(file);
+                IMD5 imD5 = new IMD5
+                {
+                    fileSize = (uint)file.Length
+                };
+                imD5.ComputeHash(file);
                 return imD5;
             }
 
@@ -680,8 +753,8 @@ namespace libWiiSharp
             {
                 byte[] buffer = Headers.IMD5.AddHeader(File.ReadAllBytes(pathToFile));
                 File.Delete(pathToFile);
-                using (FileStream fileStream = new FileStream(pathToFile, FileMode.Create))
-                    fileStream.Write(buffer, 0, buffer.Length);
+                using FileStream fileStream = new FileStream(pathToFile, FileMode.Create);
+                fileStream.Write(buffer, 0, buffer.Length);
             }
 
             /// <summary>
@@ -694,7 +767,7 @@ namespace libWiiSharp
                 Headers.IMD5 imD5 = Headers.IMD5.Create(file);
                 MemoryStream memoryStream1 = new MemoryStream();
                 MemoryStream memoryStream2 = memoryStream1;
-                imD5.writeToStream((Stream) memoryStream2);
+                imD5.WriteToStream(memoryStream2);
                 memoryStream1.Write(file, 0, file.Length);
                 byte[] array = memoryStream1.ToArray();
                 memoryStream1.Dispose();
@@ -709,8 +782,8 @@ namespace libWiiSharp
             {
                 byte[] buffer = Headers.IMD5.RemoveHeader(File.ReadAllBytes(pathToFile));
                 File.Delete(pathToFile);
-                using (FileStream fileStream = new FileStream(pathToFile, FileMode.Create))
-                    fileStream.Write(buffer, 0, buffer.Length);
+                using FileStream fileStream = new FileStream(pathToFile, FileMode.Create);
+                fileStream.Write(buffer, 0, buffer.Length);
             }
 
             /// <summary>
@@ -736,7 +809,7 @@ namespace libWiiSharp
                 MemoryStream memoryStream = new MemoryStream();
                 try
                 {
-                    this.writeToStream((Stream) memoryStream);
+                    WriteToStream(memoryStream);
                     return memoryStream;
                 }
                 catch
@@ -750,43 +823,52 @@ namespace libWiiSharp
             /// Returns the IMD5 Header as a byte array.
             /// </summary>
             /// <returns></returns>
-            public byte[] ToByteArray() => this.ToMemoryStream().ToArray();
+            public byte[] ToByteArray()
+            {
+                return ToMemoryStream().ToArray();
+            }
 
             /// <summary>
             /// Writes the IMD5 Header to the given stream.
             /// </summary>
             /// <param name="writeStream"></param>
-            public void Write(Stream writeStream) => this.writeToStream(writeStream);
+            public void Write(Stream writeStream)
+            {
+                WriteToStream(writeStream);
+            }
             #endregion
 
             #region Private Functions
-            private void writeToStream(Stream writeStream)
+            private void WriteToStream(Stream writeStream)
             {
                 writeStream.Seek(0L, SeekOrigin.Begin);
-                writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.imd5Magic)), 0, 4);
-                writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.fileSize)), 0, 4);
-                writeStream.Write(this.padding, 0, this.padding.Length);
-                writeStream.Write(this.hash, 0, this.hash.Length);
+                writeStream.Write(BitConverter.GetBytes(Shared.Swap(imd5Magic)), 0, 4);
+                writeStream.Write(BitConverter.GetBytes(Shared.Swap(fileSize)), 0, 4);
+                writeStream.Write(padding, 0, padding.Length);
+                writeStream.Write(hash, 0, hash.Length);
             }
 
-            private void computeHash(byte[] bytesToHash)
+            private void ComputeHash(byte[] bytesToHash)
             {
                 MD5 md5 = MD5.Create();
-                this.hash = md5.ComputeHash(bytesToHash);
+                hash = md5.ComputeHash(bytesToHash);
                 md5.Clear();
             }
 
-            private void parseHeader(Stream headerStream)
+            private void ParseHeader(Stream headerStream)
             {
                 headerStream.Seek(0L, SeekOrigin.Begin);
                 byte[] buffer = new byte[4];
                 headerStream.Read(buffer, 0, 4);
-                if ((int) Shared.Swap(BitConverter.ToUInt32(buffer, 0)) != (int) this.imd5Magic)
-                  throw new Exception("Invalid Magic!");
+                if ((int)Shared.Swap(BitConverter.ToUInt32(buffer, 0)) != (int)imd5Magic)
+                {
+                    throw new Exception("Invalid Magic!");
+                }
+
                 headerStream.Read(buffer, 0, 4);
-                this.fileSize = Shared.Swap(BitConverter.ToUInt32(buffer, 0));
-                headerStream.Read(this.padding, 0, this.padding.Length);
-                headerStream.Read(this.hash, 0, this.hash.Length);
+                fileSize = Shared.Swap(BitConverter.ToUInt32(buffer, 0));
+                headerStream.Read(padding, 0, padding.Length);
+                headerStream.Read(hash, 0, hash.Length);
             }
             #endregion
         }

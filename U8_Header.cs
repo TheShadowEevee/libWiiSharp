@@ -9,39 +9,39 @@ using System.IO;
 
 namespace libWiiSharp
 {
-  public class U8_Header
-  {
-    private uint u8Magic = 1437218861;
-    private uint offsetToRootNode = 32;
-    private uint headerSize;
-    private uint offsetToData;
-    private byte[] padding = new byte[16];
-
-    public uint U8Magic => this.u8Magic;
-
-    public uint OffsetToRootNode => this.offsetToRootNode;
-
-    public uint HeaderSize
+    public class U8_Header
     {
-      get => this.headerSize;
-      set => this.headerSize = value;
-    }
+        private readonly uint u8Magic = 1437218861;
+        private readonly uint offsetToRootNode = 32;
+        private uint headerSize;
+        private uint offsetToData;
+        private readonly byte[] padding = new byte[16];
 
-    public uint OffsetToData
-    {
-      get => this.offsetToData;
-      set => this.offsetToData = value;
-    }
+        public uint U8Magic => u8Magic;
 
-    public byte[] Padding => this.padding;
+        public uint OffsetToRootNode => offsetToRootNode;
 
-    public void Write(Stream writeStream)
-    {
-      writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.u8Magic)), 0, 4);
-      writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.offsetToRootNode)), 0, 4);
-      writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.headerSize)), 0, 4);
-      writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.offsetToData)), 0, 4);
-      writeStream.Write(this.padding, 0, 16);
+        public uint HeaderSize
+        {
+            get => headerSize;
+            set => headerSize = value;
+        }
+
+        public uint OffsetToData
+        {
+            get => offsetToData;
+            set => offsetToData = value;
+        }
+
+        public byte[] Padding => padding;
+
+        public void Write(Stream writeStream)
+        {
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(u8Magic)), 0, 4);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(offsetToRootNode)), 0, 4);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(headerSize)), 0, 4);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(offsetToData)), 0, 4);
+            writeStream.Write(padding, 0, 16);
+        }
     }
-  }
 }

@@ -9,62 +9,62 @@ using System.IO;
 
 namespace libWiiSharp
 {
-  internal class WaveFmtChunk
-  {
-    private uint fmtId = 1718449184;
-    private uint fmtSize = 16;
-    private ushort audioFormat = 1;
-    private ushort numChannels = 2;
-    private uint sampleRate = 44100;
-    private uint byteRate;
-    private ushort blockAlign;
-    private ushort bitsPerSample = 16;
-
-    public uint FmtSize => this.fmtSize;
-
-    public ushort NumChannels
+    internal class WaveFmtChunk
     {
-      get => this.numChannels;
-      set => this.numChannels = value;
-    }
+        private readonly uint fmtId = 1718449184;
+        private uint fmtSize = 16;
+        private ushort audioFormat = 1;
+        private ushort numChannels = 2;
+        private uint sampleRate = 44100;
+        private uint byteRate;
+        private ushort blockAlign;
+        private ushort bitsPerSample = 16;
 
-    public uint SampleRate
-    {
-      get => this.sampleRate;
-      set => this.sampleRate = value;
-    }
+        public uint FmtSize => fmtSize;
 
-    public ushort BitsPerSample
-    {
-      get => this.bitsPerSample;
-      set => this.bitsPerSample = value;
-    }
+        public ushort NumChannels
+        {
+            get => numChannels;
+            set => numChannels = value;
+        }
 
-    public uint AudioFormat => (uint) this.audioFormat;
+        public uint SampleRate
+        {
+            get => sampleRate;
+            set => sampleRate = value;
+        }
 
-    public void Write(BinaryWriter writer)
-    {
-      this.byteRate = this.sampleRate * (uint) this.numChannels * (uint) this.bitsPerSample / 8U;
-      this.blockAlign = (ushort) ((int) this.numChannels * (int) this.bitsPerSample / 8);
-      writer.Write(Shared.Swap(this.fmtId));
-      writer.Write(this.fmtSize);
-      writer.Write(this.audioFormat);
-      writer.Write(this.numChannels);
-      writer.Write(this.sampleRate);
-      writer.Write(this.byteRate);
-      writer.Write(this.blockAlign);
-      writer.Write(this.bitsPerSample);
-    }
+        public ushort BitsPerSample
+        {
+            get => bitsPerSample;
+            set => bitsPerSample = value;
+        }
 
-    public void Read(BinaryReader reader)
-    {
-      this.fmtSize = (int) Shared.Swap(reader.ReadUInt32()) == (int) this.fmtId ? reader.ReadUInt32() : throw new Exception("Wrong chunk ID!");
-      this.audioFormat = reader.ReadUInt16();
-      this.numChannels = reader.ReadUInt16();
-      this.sampleRate = reader.ReadUInt32();
-      this.byteRate = reader.ReadUInt32();
-      this.blockAlign = reader.ReadUInt16();
-      this.bitsPerSample = reader.ReadUInt16();
+        public uint AudioFormat => audioFormat;
+
+        public void Write(BinaryWriter writer)
+        {
+            byteRate = sampleRate * numChannels * bitsPerSample / 8U;
+            blockAlign = (ushort)(numChannels * bitsPerSample / 8);
+            writer.Write(Shared.Swap(fmtId));
+            writer.Write(fmtSize);
+            writer.Write(audioFormat);
+            writer.Write(numChannels);
+            writer.Write(sampleRate);
+            writer.Write(byteRate);
+            writer.Write(blockAlign);
+            writer.Write(bitsPerSample);
+        }
+
+        public void Read(BinaryReader reader)
+        {
+            fmtSize = (int)Shared.Swap(reader.ReadUInt32()) == (int)fmtId ? reader.ReadUInt32() : throw new Exception("Wrong chunk ID!");
+            audioFormat = reader.ReadUInt16();
+            numChannels = reader.ReadUInt16();
+            sampleRate = reader.ReadUInt32();
+            byteRate = reader.ReadUInt32();
+            blockAlign = reader.ReadUInt16();
+            bitsPerSample = reader.ReadUInt16();
+        }
     }
-  }
 }

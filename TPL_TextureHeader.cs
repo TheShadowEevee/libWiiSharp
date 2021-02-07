@@ -9,115 +9,115 @@ using System.IO;
 
 namespace libWiiSharp
 {
-  public class TPL_TextureHeader
-  {
-    private ushort textureHeight;
-    private ushort textureWidth;
-    private uint textureFormat;
-    private uint textureDataOffset;
-    private uint wrapS;
-    private uint wrapT;
-    private uint minFilter = 1;
-    private uint magFilter = 1;
-    private uint lodBias;
-    private byte edgeLod;
-    private byte minLod;
-    private byte maxLod;
-    private byte unpacked;
-
-    public ushort TextureHeight
+    public class TPL_TextureHeader
     {
-      get => this.textureHeight;
-      set => this.textureHeight = value;
-    }
+        private ushort textureHeight;
+        private ushort textureWidth;
+        private uint textureFormat;
+        private uint textureDataOffset;
+        private uint wrapS;
+        private uint wrapT;
+        private uint minFilter = 1;
+        private uint magFilter = 1;
+        private uint lodBias;
+        private byte edgeLod;
+        private byte minLod;
+        private byte maxLod;
+        private byte unpacked;
 
-    public ushort TextureWidth
-    {
-      get => this.textureWidth;
-      set => this.textureWidth = value;
-    }
+        public ushort TextureHeight
+        {
+            get => textureHeight;
+            set => textureHeight = value;
+        }
 
-    public uint TextureFormat
-    {
-      get => this.textureFormat;
-      set => this.textureFormat = value;
-    }
+        public ushort TextureWidth
+        {
+            get => textureWidth;
+            set => textureWidth = value;
+        }
 
-    public uint TextureDataOffset
-    {
-      get => this.textureDataOffset;
-      set => this.textureDataOffset = value;
-    }
+        public uint TextureFormat
+        {
+            get => textureFormat;
+            set => textureFormat = value;
+        }
 
-    public uint WrapS
-    {
-      get => this.wrapS;
-      set => this.wrapS = value;
-    }
+        public uint TextureDataOffset
+        {
+            get => textureDataOffset;
+            set => textureDataOffset = value;
+        }
 
-    public uint WrapT
-    {
-      get => this.wrapT;
-      set => this.wrapT = value;
-    }
+        public uint WrapS
+        {
+            get => wrapS;
+            set => wrapS = value;
+        }
 
-    public uint MinFilter
-    {
-      get => this.minFilter;
-      set => this.minFilter = value;
-    }
+        public uint WrapT
+        {
+            get => wrapT;
+            set => wrapT = value;
+        }
 
-    public uint MagFilter
-    {
-      get => this.magFilter;
-      set => this.magFilter = value;
-    }
+        public uint MinFilter
+        {
+            get => minFilter;
+            set => minFilter = value;
+        }
 
-    public uint LodBias
-    {
-      get => this.lodBias;
-      set => this.lodBias = value;
-    }
+        public uint MagFilter
+        {
+            get => magFilter;
+            set => magFilter = value;
+        }
 
-    public byte EdgeLod
-    {
-      get => this.edgeLod;
-      set => this.edgeLod = value;
-    }
+        public uint LodBias
+        {
+            get => lodBias;
+            set => lodBias = value;
+        }
 
-    public byte MinLod
-    {
-      get => this.minLod;
-      set => this.minLod = value;
-    }
+        public byte EdgeLod
+        {
+            get => edgeLod;
+            set => edgeLod = value;
+        }
 
-    public byte MaxLod
-    {
-      get => this.maxLod;
-      set => this.maxLod = value;
-    }
+        public byte MinLod
+        {
+            get => minLod;
+            set => minLod = value;
+        }
 
-    public byte Unpacked
-    {
-      get => this.unpacked;
-      set => this.unpacked = value;
-    }
+        public byte MaxLod
+        {
+            get => maxLod;
+            set => maxLod = value;
+        }
 
-    public void Write(Stream writeStream)
-    {
-      writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.textureHeight)), 0, 2);
-      writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.textureWidth)), 0, 2);
-      writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.textureFormat)), 0, 4);
-      writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.textureDataOffset)), 0, 4);
-      writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.wrapS)), 0, 4);
-      writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.wrapT)), 0, 4);
-      writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.minFilter)), 0, 4);
-      writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.magFilter)), 0, 4);
-      writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.lodBias)), 0, 4);
-      writeStream.WriteByte(this.edgeLod);
-      writeStream.WriteByte(this.minLod);
-      writeStream.WriteByte(this.maxLod);
-      writeStream.WriteByte(this.unpacked);
+        public byte Unpacked
+        {
+            get => unpacked;
+            set => unpacked = value;
+        }
+
+        public void Write(Stream writeStream)
+        {
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(textureHeight)), 0, 2);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(textureWidth)), 0, 2);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(textureFormat)), 0, 4);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(textureDataOffset)), 0, 4);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(wrapS)), 0, 4);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(wrapT)), 0, 4);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(minFilter)), 0, 4);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(magFilter)), 0, 4);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(lodBias)), 0, 4);
+            writeStream.WriteByte(edgeLod);
+            writeStream.WriteByte(minLod);
+            writeStream.WriteByte(maxLod);
+            writeStream.WriteByte(unpacked);
+        }
     }
-  }
 }

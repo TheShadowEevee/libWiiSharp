@@ -6,11 +6,11 @@
 
 namespace libWiiSharp
 {
-  public enum Region : ushort
-  {
-    Japan,
-    USA,
-    Europe,
-    Free,
-  }
+    public enum Region : ushort
+    {
+        Japan,
+        USA,
+        Europe,
+        Free,
+    }
 }

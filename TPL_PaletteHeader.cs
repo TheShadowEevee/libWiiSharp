@@ -9,51 +9,51 @@ using System.IO;
 
 namespace libWiiSharp
 {
-  public class TPL_PaletteHeader
-  {
-    private ushort numberOfItems;
-    private byte unpacked;
-    private byte pad;
-    private uint paletteFormat = (uint) byte.MaxValue;
-    private uint paletteDataOffset;
-
-    public ushort NumberOfItems
+    public class TPL_PaletteHeader
     {
-      get => this.numberOfItems;
-      set => this.numberOfItems = value;
-    }
+        private ushort numberOfItems;
+        private byte unpacked;
+        private byte pad;
+        private uint paletteFormat = byte.MaxValue;
+        private uint paletteDataOffset;
 
-    public byte Unpacked
-    {
-      get => this.unpacked;
-      set => this.unpacked = value;
-    }
+        public ushort NumberOfItems
+        {
+            get => numberOfItems;
+            set => numberOfItems = value;
+        }
 
-    public byte Pad
-    {
-      get => this.pad;
-      set => this.pad = value;
-    }
+        public byte Unpacked
+        {
+            get => unpacked;
+            set => unpacked = value;
+        }
 
-    public uint PaletteFormat
-    {
-      get => this.paletteFormat;
-      set => this.paletteFormat = value;
-    }
+        public byte Pad
+        {
+            get => pad;
+            set => pad = value;
+        }
 
-    public uint PaletteDataOffset
-    {
-      get => this.paletteDataOffset;
-      set => this.paletteDataOffset = value;
-    }
+        public uint PaletteFormat
+        {
+            get => paletteFormat;
+            set => paletteFormat = value;
+        }
 
-    public void Write(Stream writeStream)
-    {
-      writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.numberOfItems)), 0, 2);
-      writeStream.WriteByte(this.unpacked);
-      writeStream.WriteByte(this.pad);
-      writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.paletteFormat)), 0, 4);
-      writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.paletteDataOffset)), 0, 4);
+        public uint PaletteDataOffset
+        {
+            get => paletteDataOffset;
+            set => paletteDataOffset = value;
+        }
+
+        public void Write(Stream writeStream)
+        {
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(numberOfItems)), 0, 2);
+            writeStream.WriteByte(unpacked);
+            writeStream.WriteByte(pad);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(paletteFormat)), 0, 4);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(paletteDataOffset)), 0, 4);
+        }
     }
-  }
 }

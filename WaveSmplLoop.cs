@@ -8,45 +8,45 @@ using System.IO;
 
 namespace libWiiSharp
 {
-  internal class WaveSmplLoop
-  {
-    private uint cuePointId;
-    private uint type;
-    private uint start;
-    private uint end;
-    private uint fraction;
-    private uint playCount;
-
-    public uint LoopStart
+    internal class WaveSmplLoop
     {
-      get => this.start;
-      set => this.start = value;
-    }
+        private uint cuePointId;
+        private uint type;
+        private uint start;
+        private uint end;
+        private uint fraction;
+        private uint playCount;
 
-    public uint LoopEnd
-    {
-      get => this.end;
-      set => this.end = value;
-    }
+        public uint LoopStart
+        {
+            get => start;
+            set => start = value;
+        }
 
-    public void Write(BinaryWriter writer)
-    {
-      writer.Write(this.cuePointId);
-      writer.Write(this.type);
-      writer.Write(this.start);
-      writer.Write(this.end);
-      writer.Write(this.fraction);
-      writer.Write(this.playCount);
-    }
+        public uint LoopEnd
+        {
+            get => end;
+            set => end = value;
+        }
 
-    public void Read(BinaryReader reader)
-    {
-      this.cuePointId = reader.ReadUInt32();
-      this.type = reader.ReadUInt32();
-      this.start = reader.ReadUInt32();
-      this.end = reader.ReadUInt32();
-      this.fraction = reader.ReadUInt32();
-      this.playCount = reader.ReadUInt32();
+        public void Write(BinaryWriter writer)
+        {
+            writer.Write(cuePointId);
+            writer.Write(type);
+            writer.Write(start);
+            writer.Write(end);
+            writer.Write(fraction);
+            writer.Write(playCount);
+        }
+
+        public void Read(BinaryReader reader)
+        {
+            cuePointId = reader.ReadUInt32();
+            type = reader.ReadUInt32();
+            start = reader.ReadUInt32();
+            end = reader.ReadUInt32();
+            fraction = reader.ReadUInt32();
+            playCount = reader.ReadUInt32();
+        }
     }
-  }
 }

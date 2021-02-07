@@ -6,11 +6,11 @@
 
 namespace libWiiSharp
 {
-  public enum TPL_PaletteFormat
-  {
-    IA8 = 0,
-    RGB565 = 1,
-    RGB5A3 = 2,
-    None = 255, // 0x000000FF
-  }
+    public enum TPL_PaletteFormat
+    {
+        IA8 = 0,
+        RGB565 = 1,
+        RGB5A3 = 2,
+        None = 255, // 0x000000FF
+    }
 }

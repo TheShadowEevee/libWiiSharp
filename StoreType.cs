@@ -6,11 +6,11 @@
 
 namespace libWiiSharp
 {
-  public enum StoreType
-  {
-    EncryptedContent,
-    DecryptedContent,
-    WAD,
-    All,
-  }
+    public enum StoreType
+    {
+        EncryptedContent,
+        DecryptedContent,
+        WAD,
+        All,
+    }
 }

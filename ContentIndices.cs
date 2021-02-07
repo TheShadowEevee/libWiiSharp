@@ -20,26 +20,29 @@ using System;
 
 namespace libWiiSharp
 {
-  public struct ContentIndices : IComparable
-  {
-    private int index;
-    private int contentIndex;
-
-    public int Index => this.index;
-
-    public int ContentIndex => this.contentIndex;
-
-    public ContentIndices(int index, int contentIndex)
+    public struct ContentIndices : IComparable
     {
-      this.index = index;
-      this.contentIndex = contentIndex;
-    }
+        private readonly int index;
+        private readonly int contentIndex;
 
-    public int CompareTo(object obj)
-    {
-      if (obj is ContentIndices contentIndices)
-        return this.contentIndex.CompareTo(contentIndices.contentIndex);
-      throw new ArgumentException();
+        public int Index => index;
+
+        public int ContentIndex => contentIndex;
+
+        public ContentIndices(int index, int contentIndex)
+        {
+            this.index = index;
+            this.contentIndex = contentIndex;
+        }
+
+        public int CompareTo(object obj)
+        {
+            if (obj is ContentIndices contentIndices)
+            {
+                return contentIndex.CompareTo(contentIndices.contentIndex);
+            }
+
+            throw new ArgumentException();
+        }
     }
-  }
 }

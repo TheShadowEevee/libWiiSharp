@@ -1,10 +1,9 @@
 ﻿using System.Reflection;
 using System.Resources;
 using System.Runtime.InteropServices;
-using System.Security.Permissions;
 
 [assembly: AssemblyTitle("libWiiSharp_Modified")]
-[assembly: AssemblyDescription("a wii related .NET library modified to add features for othe programs.")]
+[assembly: AssemblyDescription("A wii related .NET library modified to add features for othe programs.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Leathl,SC reproductions")]
 [assembly: AssemblyProduct("libWiiSharp_Modified")]
@@ -15,5 +14,3 @@ using System.Security.Permissions;
 [assembly: AssemblyFileVersion("0.4.0.0")]
 [assembly: NeutralResourcesLanguage("en")]
 [assembly: AssemblyVersion("0.4.0.0")]
-[assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
-[assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]

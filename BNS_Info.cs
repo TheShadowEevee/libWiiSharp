@@ -24,12 +24,12 @@ namespace libWiiSharp
     internal class BNS_Info
     {
         //Private Variables
-        private byte[] magic = new byte[4]
+        private readonly byte[] magic = new byte[4]
         {
-            (byte) 73,
-            (byte) 78,
-            (byte) 70,
-            (byte) 79
+             73,
+             78,
+             70,
+             79
         };
         private uint size = 160;
         private byte codec;
@@ -72,230 +72,233 @@ namespace libWiiSharp
         //Public Variables
         public byte HasLoop
         {
-            get => this.hasLoop;
-            set => this.hasLoop = value;
+            get => hasLoop;
+            set => hasLoop = value;
         }
 
         public uint Coefficients1Offset
         {
-            get => this.coefficients1Offset;
-            set => this.coefficients1Offset = value;
+            get => coefficients1Offset;
+            set => coefficients1Offset = value;
         }
 
         public uint Channel1StartOffset
         {
-            get => this.channel1StartOffset;
-            set => this.channel1StartOffset = value;
+            get => channel1StartOffset;
+            set => channel1StartOffset = value;
         }
 
         public uint Channel2StartOffset
         {
-            get => this.channel2StartOffset;
-            set => this.channel2StartOffset = value;
+            get => channel2StartOffset;
+            set => channel2StartOffset = value;
         }
 
         public uint Size
         {
-            get => this.size;
-            set => this.size = value;
+            get => size;
+            set => size = value;
         }
 
         public ushort SampleRate
         {
-            get => this.sampleRate;
-            set => this.sampleRate = value;
+            get => sampleRate;
+            set => sampleRate = value;
         }
 
         public byte ChannelCount
         {
-            get => this.channelCount;
-            set => this.channelCount = value;
+            get => channelCount;
+            set => channelCount = value;
         }
 
         public uint Channel1Start
         {
-            get => this.channel1Start;
-            set => this.channel1Start = value;
+            get => channel1Start;
+            set => channel1Start = value;
         }
 
         public uint Channel2Start
         {
-        get => this.channel2Start;
-        set => this.channel2Start = value;
+            get => channel2Start;
+            set => channel2Start = value;
         }
 
         public uint LoopStart
         {
-            get => this.loopStart;
-            set => this.loopStart = value;
+            get => loopStart;
+            set => loopStart = value;
         }
 
         public uint LoopEnd
         {
-            get => this.loopEnd;
-            set => this.loopEnd = value;
+            get => loopEnd;
+            set => loopEnd = value;
         }
 
         public int[] Coefficients1
         {
-            get => this.coefficients1;
-            set => this.coefficients1 = value;
+            get => coefficients1;
+            set => coefficients1 = value;
         }
 
         public int[] Coefficients2
         {
-            get => this.coefficients2;
-            set => this.coefficients2 = value;
+            get => coefficients2;
+            set => coefficients2 = value;
         }
 
         public void Write(Stream outStream)
         {
-            outStream.Write(this.magic, 0, this.magic.Length);
-            byte[] bytes1 = BitConverter.GetBytes(this.size);
-            Array.Reverse((Array) bytes1);
+            outStream.Write(magic, 0, magic.Length);
+            byte[] bytes1 = BitConverter.GetBytes(size);
+            Array.Reverse(bytes1);
             outStream.Write(bytes1, 0, bytes1.Length);
-            outStream.WriteByte(this.codec);
-            outStream.WriteByte(this.hasLoop);
-            outStream.WriteByte(this.channelCount);
-            outStream.WriteByte(this.zero);
-            byte[] bytes2 = BitConverter.GetBytes(this.sampleRate);
-            Array.Reverse((Array) bytes2);
+            outStream.WriteByte(codec);
+            outStream.WriteByte(hasLoop);
+            outStream.WriteByte(channelCount);
+            outStream.WriteByte(zero);
+            byte[] bytes2 = BitConverter.GetBytes(sampleRate);
+            Array.Reverse(bytes2);
             outStream.Write(bytes2, 0, bytes2.Length);
-            byte[] bytes3 = BitConverter.GetBytes(this.pad0);
-            Array.Reverse((Array) bytes3);
+            byte[] bytes3 = BitConverter.GetBytes(pad0);
+            Array.Reverse(bytes3);
             outStream.Write(bytes3, 0, bytes3.Length);
-            byte[] bytes4 = BitConverter.GetBytes(this.loopStart);
-            Array.Reverse((Array) bytes4);
+            byte[] bytes4 = BitConverter.GetBytes(loopStart);
+            Array.Reverse(bytes4);
             outStream.Write(bytes4, 0, bytes4.Length);
-            byte[] bytes5 = BitConverter.GetBytes(this.loopEnd);
-            Array.Reverse((Array) bytes5);
+            byte[] bytes5 = BitConverter.GetBytes(loopEnd);
+            Array.Reverse(bytes5);
             outStream.Write(bytes5, 0, bytes5.Length);
-            byte[] bytes6 = BitConverter.GetBytes(this.offsetToChannelStart);
-            Array.Reverse((Array) bytes6);
+            byte[] bytes6 = BitConverter.GetBytes(offsetToChannelStart);
+            Array.Reverse(bytes6);
             outStream.Write(bytes6, 0, bytes6.Length);
-            byte[] bytes7 = BitConverter.GetBytes(this.pad1);
-            Array.Reverse((Array) bytes7);
+            byte[] bytes7 = BitConverter.GetBytes(pad1);
+            Array.Reverse(bytes7);
             outStream.Write(bytes7, 0, bytes7.Length);
-            byte[] bytes8 = BitConverter.GetBytes(this.channel1StartOffset);
-            Array.Reverse((Array) bytes8);
+            byte[] bytes8 = BitConverter.GetBytes(channel1StartOffset);
+            Array.Reverse(bytes8);
             outStream.Write(bytes8, 0, bytes8.Length);
-            byte[] bytes9 = BitConverter.GetBytes(this.channel2StartOffset);
-            Array.Reverse((Array) bytes9);
+            byte[] bytes9 = BitConverter.GetBytes(channel2StartOffset);
+            Array.Reverse(bytes9);
             outStream.Write(bytes9, 0, bytes9.Length);
-            byte[] bytes10 = BitConverter.GetBytes(this.channel1Start);
-            Array.Reverse((Array) bytes10);
+            byte[] bytes10 = BitConverter.GetBytes(channel1Start);
+            Array.Reverse(bytes10);
             outStream.Write(bytes10, 0, bytes10.Length);
-            byte[] bytes11 = BitConverter.GetBytes(this.coefficients1Offset);
-            Array.Reverse((Array) bytes11);
+            byte[] bytes11 = BitConverter.GetBytes(coefficients1Offset);
+            Array.Reverse(bytes11);
             outStream.Write(bytes11, 0, bytes11.Length);
-            if (this.channelCount == (byte) 2)
+            if (channelCount == 2)
             {
-                byte[] bytes12 = BitConverter.GetBytes(this.pad2);
-                Array.Reverse((Array) bytes12);
+                byte[] bytes12 = BitConverter.GetBytes(pad2);
+                Array.Reverse(bytes12);
                 outStream.Write(bytes12, 0, bytes12.Length);
-                byte[] bytes13 = BitConverter.GetBytes(this.channel2Start);
-                Array.Reverse((Array) bytes13);
+                byte[] bytes13 = BitConverter.GetBytes(channel2Start);
+                Array.Reverse(bytes13);
                 outStream.Write(bytes13, 0, bytes13.Length);
-                byte[] bytes14 = BitConverter.GetBytes(this.coefficients2Offset);
-                Array.Reverse((Array) bytes14);
+                byte[] bytes14 = BitConverter.GetBytes(coefficients2Offset);
+                Array.Reverse(bytes14);
                 outStream.Write(bytes14, 0, bytes14.Length);
-                byte[] bytes15 = BitConverter.GetBytes(this.pad3);
-                Array.Reverse((Array) bytes15);
+                byte[] bytes15 = BitConverter.GetBytes(pad3);
+                Array.Reverse(bytes15);
                 outStream.Write(bytes15, 0, bytes15.Length);
-                foreach (int num in this.coefficients1)
+                foreach (int num in coefficients1)
                 {
                     byte[] bytes16 = BitConverter.GetBytes(num);
-                    Array.Reverse((Array) bytes16);
+                    Array.Reverse(bytes16);
                     outStream.Write(bytes16, 2, bytes16.Length - 2);
                 }
-                byte[] bytes17 = BitConverter.GetBytes(this.channel1Gain);
-                Array.Reverse((Array) bytes17);
+                byte[] bytes17 = BitConverter.GetBytes(channel1Gain);
+                Array.Reverse(bytes17);
                 outStream.Write(bytes17, 0, bytes17.Length);
-                byte[] bytes18 = BitConverter.GetBytes(this.channel1PredictiveScale);
-                Array.Reverse((Array) bytes18);
+                byte[] bytes18 = BitConverter.GetBytes(channel1PredictiveScale);
+                Array.Reverse(bytes18);
                 outStream.Write(bytes18, 0, bytes18.Length);
-                byte[] bytes19 = BitConverter.GetBytes(this.channel1PreviousValue);
-                Array.Reverse((Array) bytes19);
+                byte[] bytes19 = BitConverter.GetBytes(channel1PreviousValue);
+                Array.Reverse(bytes19);
                 outStream.Write(bytes19, 0, bytes19.Length);
-                byte[] bytes20 = BitConverter.GetBytes(this.channel1NextPreviousValue);
-                Array.Reverse((Array) bytes20);
+                byte[] bytes20 = BitConverter.GetBytes(channel1NextPreviousValue);
+                Array.Reverse(bytes20);
                 outStream.Write(bytes20, 0, bytes20.Length);
-                byte[] bytes21 = BitConverter.GetBytes(this.channel1LoopPredictiveScale);
-                Array.Reverse((Array) bytes21);
+                byte[] bytes21 = BitConverter.GetBytes(channel1LoopPredictiveScale);
+                Array.Reverse(bytes21);
                 outStream.Write(bytes21, 0, bytes21.Length);
-                byte[] bytes22 = BitConverter.GetBytes(this.channel1LoopPreviousValue);
-                Array.Reverse((Array) bytes22);
+                byte[] bytes22 = BitConverter.GetBytes(channel1LoopPreviousValue);
+                Array.Reverse(bytes22);
                 outStream.Write(bytes22, 0, bytes22.Length);
-                byte[] bytes23 = BitConverter.GetBytes(this.channel1LoopNextPreviousValue);
-                Array.Reverse((Array) bytes23);
+                byte[] bytes23 = BitConverter.GetBytes(channel1LoopNextPreviousValue);
+                Array.Reverse(bytes23);
                 outStream.Write(bytes23, 0, bytes23.Length);
-                byte[] bytes24 = BitConverter.GetBytes(this.channel1LoopPadding);
-                Array.Reverse((Array) bytes24);
+                byte[] bytes24 = BitConverter.GetBytes(channel1LoopPadding);
+                Array.Reverse(bytes24);
                 outStream.Write(bytes24, 0, bytes24.Length);
-                foreach (int num in this.coefficients2)
+                foreach (int num in coefficients2)
                 {
                     byte[] bytes16 = BitConverter.GetBytes(num);
-                    Array.Reverse((Array) bytes16);
+                    Array.Reverse(bytes16);
                     outStream.Write(bytes16, 2, bytes16.Length - 2);
                 }
-                byte[] bytes25 = BitConverter.GetBytes(this.channel2Gain);
-                Array.Reverse((Array) bytes25);
+                byte[] bytes25 = BitConverter.GetBytes(channel2Gain);
+                Array.Reverse(bytes25);
                 outStream.Write(bytes25, 0, bytes25.Length);
-                byte[] bytes26 = BitConverter.GetBytes(this.channel2PredictiveScale);
-                Array.Reverse((Array) bytes26);
+                byte[] bytes26 = BitConverter.GetBytes(channel2PredictiveScale);
+                Array.Reverse(bytes26);
                 outStream.Write(bytes26, 0, bytes26.Length);
-                byte[] bytes27 = BitConverter.GetBytes(this.channel2PreviousValue);
-                Array.Reverse((Array) bytes27);
+                byte[] bytes27 = BitConverter.GetBytes(channel2PreviousValue);
+                Array.Reverse(bytes27);
                 outStream.Write(bytes27, 0, bytes27.Length);
-                byte[] bytes28 = BitConverter.GetBytes(this.channel2NextPreviousValue);
-                Array.Reverse((Array) bytes28);
+                byte[] bytes28 = BitConverter.GetBytes(channel2NextPreviousValue);
+                Array.Reverse(bytes28);
                 outStream.Write(bytes28, 0, bytes28.Length);
-                byte[] bytes29 = BitConverter.GetBytes(this.channel2LoopPredictiveScale);
-                Array.Reverse((Array) bytes29);
+                byte[] bytes29 = BitConverter.GetBytes(channel2LoopPredictiveScale);
+                Array.Reverse(bytes29);
                 outStream.Write(bytes29, 0, bytes29.Length);
-                byte[] bytes30 = BitConverter.GetBytes(this.channel2LoopPreviousValue);
-                Array.Reverse((Array) bytes30);
+                byte[] bytes30 = BitConverter.GetBytes(channel2LoopPreviousValue);
+                Array.Reverse(bytes30);
                 outStream.Write(bytes30, 0, bytes30.Length);
-                byte[] bytes31 = BitConverter.GetBytes(this.channel2LoopNextPreviousValue);
-                Array.Reverse((Array) bytes31);
+                byte[] bytes31 = BitConverter.GetBytes(channel2LoopNextPreviousValue);
+                Array.Reverse(bytes31);
                 outStream.Write(bytes31, 0, bytes31.Length);
-                byte[] bytes32 = BitConverter.GetBytes(this.channel2LoopPadding);
-                Array.Reverse((Array) bytes32);
+                byte[] bytes32 = BitConverter.GetBytes(channel2LoopPadding);
+                Array.Reverse(bytes32);
                 outStream.Write(bytes32, 0, bytes32.Length);
             }
             else
             {
-                if (this.channelCount != (byte) 1)
+                if (channelCount != 1)
+                {
                     return;
-                foreach (int num in this.coefficients1)
+                }
+
+                foreach (int num in coefficients1)
                 {
                     byte[] bytes12 = BitConverter.GetBytes(num);
-                    Array.Reverse((Array) bytes12);
+                    Array.Reverse(bytes12);
                     outStream.Write(bytes12, 2, bytes12.Length - 2);
                 }
-                byte[] bytes13 = BitConverter.GetBytes(this.channel1Gain);
-                Array.Reverse((Array) bytes13);
+                byte[] bytes13 = BitConverter.GetBytes(channel1Gain);
+                Array.Reverse(bytes13);
                 outStream.Write(bytes13, 0, bytes13.Length);
-                byte[] bytes14 = BitConverter.GetBytes(this.channel1PredictiveScale);
-                Array.Reverse((Array) bytes14);
+                byte[] bytes14 = BitConverter.GetBytes(channel1PredictiveScale);
+                Array.Reverse(bytes14);
                 outStream.Write(bytes14, 0, bytes14.Length);
-                byte[] bytes15 = BitConverter.GetBytes(this.channel1PreviousValue);
-                Array.Reverse((Array) bytes15);
+                byte[] bytes15 = BitConverter.GetBytes(channel1PreviousValue);
+                Array.Reverse(bytes15);
                 outStream.Write(bytes15, 0, bytes15.Length);
-                byte[] bytes16 = BitConverter.GetBytes(this.channel1NextPreviousValue);
-                Array.Reverse((Array) bytes16);
+                byte[] bytes16 = BitConverter.GetBytes(channel1NextPreviousValue);
+                Array.Reverse(bytes16);
                 outStream.Write(bytes16, 0, bytes16.Length);
-                byte[] bytes17 = BitConverter.GetBytes(this.channel1LoopPredictiveScale);
-                Array.Reverse((Array) bytes17);
+                byte[] bytes17 = BitConverter.GetBytes(channel1LoopPredictiveScale);
+                Array.Reverse(bytes17);
                 outStream.Write(bytes17, 0, bytes17.Length);
-                byte[] bytes18 = BitConverter.GetBytes(this.channel1LoopPreviousValue);
-                Array.Reverse((Array) bytes18);
+                byte[] bytes18 = BitConverter.GetBytes(channel1LoopPreviousValue);
+                Array.Reverse(bytes18);
                 outStream.Write(bytes18, 0, bytes18.Length);
-                byte[] bytes19 = BitConverter.GetBytes(this.channel1LoopNextPreviousValue);
-                Array.Reverse((Array) bytes19);
+                byte[] bytes19 = BitConverter.GetBytes(channel1LoopNextPreviousValue);
+                Array.Reverse(bytes19);
                 outStream.Write(bytes19, 0, bytes19.Length);
-                byte[] bytes20 = BitConverter.GetBytes(this.channel1LoopPadding);
-                Array.Reverse((Array) bytes20);
+                byte[] bytes20 = BitConverter.GetBytes(channel1LoopPadding);
+                Array.Reverse(bytes20);
                 outStream.Write(bytes20, 0, bytes20.Length);
             }
         }
@@ -303,62 +306,74 @@ namespace libWiiSharp
         public void Read(Stream input)
         {
             BinaryReader binaryReader = new BinaryReader(input);
-            this.size = Shared.CompareByteArrays(this.magic, binaryReader.ReadBytes(4)) ? Shared.Swap(binaryReader.ReadUInt32()) : throw new Exception("This is not a valid BNS audfo file!");
-            this.codec = binaryReader.ReadByte();
-            this.hasLoop = binaryReader.ReadByte();
-            this.channelCount = binaryReader.ReadByte();
-            this.zero = binaryReader.ReadByte();
-            this.sampleRate = Shared.Swap(binaryReader.ReadUInt16());
-            this.pad0 = Shared.Swap(binaryReader.ReadUInt16());
-            this.loopStart = Shared.Swap(binaryReader.ReadUInt32());
-            this.loopEnd = Shared.Swap(binaryReader.ReadUInt32());
-            this.offsetToChannelStart = Shared.Swap(binaryReader.ReadUInt32());
-            this.pad1 = Shared.Swap(binaryReader.ReadUInt32());
-            this.channel1StartOffset = Shared.Swap(binaryReader.ReadUInt32());
-            this.channel2StartOffset = Shared.Swap(binaryReader.ReadUInt32());
-            this.channel1Start = Shared.Swap(binaryReader.ReadUInt32());
-            this.coefficients1Offset = Shared.Swap(binaryReader.ReadUInt32());
-            if (this.channelCount == (byte) 2)
+            size = Shared.CompareByteArrays(magic, binaryReader.ReadBytes(4)) ? Shared.Swap(binaryReader.ReadUInt32()) : throw new Exception("This is not a valid BNS audfo file!");
+            codec = binaryReader.ReadByte();
+            hasLoop = binaryReader.ReadByte();
+            channelCount = binaryReader.ReadByte();
+            zero = binaryReader.ReadByte();
+            sampleRate = Shared.Swap(binaryReader.ReadUInt16());
+            pad0 = Shared.Swap(binaryReader.ReadUInt16());
+            loopStart = Shared.Swap(binaryReader.ReadUInt32());
+            loopEnd = Shared.Swap(binaryReader.ReadUInt32());
+            offsetToChannelStart = Shared.Swap(binaryReader.ReadUInt32());
+            pad1 = Shared.Swap(binaryReader.ReadUInt32());
+            channel1StartOffset = Shared.Swap(binaryReader.ReadUInt32());
+            channel2StartOffset = Shared.Swap(binaryReader.ReadUInt32());
+            channel1Start = Shared.Swap(binaryReader.ReadUInt32());
+            coefficients1Offset = Shared.Swap(binaryReader.ReadUInt32());
+            if (channelCount == 2)
             {
-                this.pad2 = Shared.Swap(binaryReader.ReadUInt32());
-                this.channel2Start = Shared.Swap(binaryReader.ReadUInt32());
-                this.coefficients2Offset = Shared.Swap(binaryReader.ReadUInt32());
-                this.pad3 = Shared.Swap(binaryReader.ReadUInt32());
+                pad2 = Shared.Swap(binaryReader.ReadUInt32());
+                channel2Start = Shared.Swap(binaryReader.ReadUInt32());
+                coefficients2Offset = Shared.Swap(binaryReader.ReadUInt32());
+                pad3 = Shared.Swap(binaryReader.ReadUInt32());
                 for (int index = 0; index < 16; ++index)
-                    this.coefficients1[index] = (int) (short) Shared.Swap(binaryReader.ReadUInt16());
-                this.channel1Gain = Shared.Swap(binaryReader.ReadUInt16());
-                this.channel1PredictiveScale = Shared.Swap(binaryReader.ReadUInt16());
-                this.channel1PreviousValue = Shared.Swap(binaryReader.ReadUInt16());
-                this.channel1NextPreviousValue = Shared.Swap(binaryReader.ReadUInt16());
-                this.channel1LoopPredictiveScale = Shared.Swap(binaryReader.ReadUInt16());
-                this.channel1LoopPreviousValue = Shared.Swap(binaryReader.ReadUInt16());
-                this.channel1LoopNextPreviousValue = Shared.Swap(binaryReader.ReadUInt16());
-                this.channel1LoopPadding = Shared.Swap(binaryReader.ReadUInt16());
+                {
+                    coefficients1[index] = (short)Shared.Swap(binaryReader.ReadUInt16());
+                }
+
+                channel1Gain = Shared.Swap(binaryReader.ReadUInt16());
+                channel1PredictiveScale = Shared.Swap(binaryReader.ReadUInt16());
+                channel1PreviousValue = Shared.Swap(binaryReader.ReadUInt16());
+                channel1NextPreviousValue = Shared.Swap(binaryReader.ReadUInt16());
+                channel1LoopPredictiveScale = Shared.Swap(binaryReader.ReadUInt16());
+                channel1LoopPreviousValue = Shared.Swap(binaryReader.ReadUInt16());
+                channel1LoopNextPreviousValue = Shared.Swap(binaryReader.ReadUInt16());
+                channel1LoopPadding = Shared.Swap(binaryReader.ReadUInt16());
                 for (int index = 0; index < 16; ++index)
-                    this.coefficients2[index] = (int) (short) Shared.Swap(binaryReader.ReadUInt16());
-                this.channel2Gain = Shared.Swap(binaryReader.ReadUInt16());
-                this.channel2PredictiveScale = Shared.Swap(binaryReader.ReadUInt16());
-                this.channel2PreviousValue = Shared.Swap(binaryReader.ReadUInt16());
-                this.channel2NextPreviousValue = Shared.Swap(binaryReader.ReadUInt16());
-                this.channel2LoopPredictiveScale = Shared.Swap(binaryReader.ReadUInt16());
-                this.channel2LoopPreviousValue = Shared.Swap(binaryReader.ReadUInt16());
-                this.channel2LoopNextPreviousValue = Shared.Swap(binaryReader.ReadUInt16());
-                this.channel2LoopPadding = Shared.Swap(binaryReader.ReadUInt16());
+                {
+                    coefficients2[index] = (short)Shared.Swap(binaryReader.ReadUInt16());
+                }
+
+                channel2Gain = Shared.Swap(binaryReader.ReadUInt16());
+                channel2PredictiveScale = Shared.Swap(binaryReader.ReadUInt16());
+                channel2PreviousValue = Shared.Swap(binaryReader.ReadUInt16());
+                channel2NextPreviousValue = Shared.Swap(binaryReader.ReadUInt16());
+                channel2LoopPredictiveScale = Shared.Swap(binaryReader.ReadUInt16());
+                channel2LoopPreviousValue = Shared.Swap(binaryReader.ReadUInt16());
+                channel2LoopNextPreviousValue = Shared.Swap(binaryReader.ReadUInt16());
+                channel2LoopPadding = Shared.Swap(binaryReader.ReadUInt16());
             }
             else
             {
-                if (this.channelCount != (byte) 1)
+                if (channelCount != 1)
+                {
                     return;
+                }
+
                 for (int index = 0; index < 16; ++index)
-                    this.coefficients1[index] = (int) (short) Shared.Swap(binaryReader.ReadUInt16());
-                this.channel1Gain = Shared.Swap(binaryReader.ReadUInt16());
-                this.channel1PredictiveScale = Shared.Swap(binaryReader.ReadUInt16());
-                this.channel1PreviousValue = Shared.Swap(binaryReader.ReadUInt16());
-                this.channel1NextPreviousValue = Shared.Swap(binaryReader.ReadUInt16());
-                this.channel1LoopPredictiveScale = Shared.Swap(binaryReader.ReadUInt16());
-                this.channel1LoopPreviousValue = Shared.Swap(binaryReader.ReadUInt16());
-                this.channel1LoopNextPreviousValue = Shared.Swap(binaryReader.ReadUInt16());
-                this.channel1LoopPadding = Shared.Swap(binaryReader.ReadUInt16());
+                {
+                    coefficients1[index] = (short)Shared.Swap(binaryReader.ReadUInt16());
+                }
+
+                channel1Gain = Shared.Swap(binaryReader.ReadUInt16());
+                channel1PredictiveScale = Shared.Swap(binaryReader.ReadUInt16());
+                channel1PreviousValue = Shared.Swap(binaryReader.ReadUInt16());
+                channel1NextPreviousValue = Shared.Swap(binaryReader.ReadUInt16());
+                channel1LoopPredictiveScale = Shared.Swap(binaryReader.ReadUInt16());
+                channel1LoopPreviousValue = Shared.Swap(binaryReader.ReadUInt16());
+                channel1LoopNextPreviousValue = Shared.Swap(binaryReader.ReadUInt16());
+                channel1LoopPadding = Shared.Swap(binaryReader.ReadUInt16());
             }
         }
     }

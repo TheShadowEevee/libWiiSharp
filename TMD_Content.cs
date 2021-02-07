@@ -6,42 +6,42 @@
 
 namespace libWiiSharp
 {
-  public class TMD_Content
-  {
-    private uint contentId;
-    private ushort index;
-    private ushort type;
-    private ulong size;
-    private byte[] hash = new byte[20];
-
-    public uint ContentID
+    public class TMD_Content
     {
-      get => this.contentId;
-      set => this.contentId = value;
-    }
+        private uint contentId;
+        private ushort index;
+        private ushort type;
+        private ulong size;
+        private byte[] hash = new byte[20];
 
-    public ushort Index
-    {
-      get => this.index;
-      set => this.index = value;
-    }
+        public uint ContentID
+        {
+            get => contentId;
+            set => contentId = value;
+        }
 
-    public ContentType Type
-    {
-      get => (ContentType) this.type;
-      set => this.type = (ushort) value;
-    }
+        public ushort Index
+        {
+            get => index;
+            set => index = value;
+        }
 
-    public ulong Size
-    {
-      get => this.size;
-      set => this.size = value;
-    }
+        public ContentType Type
+        {
+            get => (ContentType)type;
+            set => type = (ushort)value;
+        }
 
-    public byte[] Hash
-    {
-      get => this.hash;
-      set => this.hash = value;
+        public ulong Size
+        {
+            get => size;
+            set => size = value;
+        }
+
+        public byte[] Hash
+        {
+            get => hash;
+            set => hash = value;
+        }
     }
-  }
 }

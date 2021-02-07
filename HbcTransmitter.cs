@@ -52,8 +52,8 @@ namespace libWiiSharp
         private bool compress;
         private string ipAddress;
         private int port = 4299;
-        private string lastErrorMessage = string.Empty;
-        private Protocol protocol;
+        //private string lastErrorMessage = string.Empty;
+        private readonly Protocol protocol;
         private TcpClient tcpClient;
         private NetworkStream nwStream;
         private string lastError = string.Empty;
@@ -67,8 +67,8 @@ namespace libWiiSharp
         /// </summary>
         public int Blocksize
         {
-            get => this.blocksize;
-            set => this.blocksize = value;
+            get => blocksize;
+            set => blocksize = value;
         }
 
         /// <summary>
@@ -76,8 +76,8 @@ namespace libWiiSharp
         /// </summary>
         public int WiiloadVersionMayor
         {
-              get => this.wiiloadMayor;
-              set => this.wiiloadMayor = value;
+            get => wiiloadMayor;
+            set => wiiloadMayor = value;
         }
 
         /// <summary>
@@ -85,8 +85,8 @@ namespace libWiiSharp
         /// </summary>
         public int WiiloadVersionMinor
         {
-            get => this.wiiloadMinor;
-            set => this.wiiloadMinor = value;
+            get => wiiloadMinor;
+            set => wiiloadMinor = value;
         }
 
         /// <summary>
@@ -95,12 +95,15 @@ namespace libWiiSharp
         /// </summary>
         public bool Compress
         {
-            get => this.compress;
+            get => compress;
             set
             {
-                if (this.protocol == Protocol.HAXX)
+                if (protocol == Protocol.HAXX)
+                {
                     return;
-                this.compress = value;
+                }
+
+                compress = value;
             }
         }
 
@@ -109,8 +112,8 @@ namespace libWiiSharp
         /// </summary>
         public string IpAddress
         {
-            get => this.ipAddress;
-            set => this.ipAddress = value;
+            get => ipAddress;
+            set => ipAddress = value;
         }
 
         /// The port used for the transmission.
@@ -118,141 +121,153 @@ namespace libWiiSharp
         /// </summary>
         public int Port
         {
-            get => this.port;
-            set => this.port = value;
+            get => port;
+            set => port = value;
         }
 
         /// <summary>
         /// After a successfully completed transmission, this value holds the number of transmitted bytes.
         /// </summary>
-        public int TransmittedLength => this.transmittedLength;
+        public int TransmittedLength => transmittedLength;
 
         /// <summary>
         /// After a successfully completed transmission, this value holds the compression ratio.
         /// Will be 0 if the data wasn't compressed.
         /// </summary>
-        public int CompressionRatio => this.compressionRatio;
+        public int CompressionRatio => compressionRatio;
 
         /// <summary>
         /// Holds the last occured error message.
         /// </summary>
-        public string LastError => this.lastError;
+        public string LastError => lastError;
 
         public HbcTransmitter(Protocol protocol, string ipAddress)
         {
             this.protocol = protocol;
             this.ipAddress = ipAddress;
-            this.wiiloadMinor = protocol == Protocol.HAXX ? 4 : 5;
-            this.compress = protocol == Protocol.JODI;
+            wiiloadMinor = protocol == Protocol.HAXX ? 4 : 5;
+            compress = protocol == Protocol.JODI;
         }
 
         #region IDisposable Members
 
-        ~HbcTransmitter() => this.Dispose(false);
+        ~HbcTransmitter() => Dispose(false);
 
         public void Dispose()
         {
-            this.Dispose(true);
-            GC.SuppressFinalize((object) this);
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing && !this.isDisposed)
+            if (disposing && !isDisposed)
             {
-                this.ipAddress = (string) null;
-                this.lastErrorMessage = (string) null;
-                this.lastError = (string) null;
-                if (this.nwStream != null)
+                ipAddress = null;
+                //this.lastErrorMessage = (string)null;
+                lastError = null;
+                if (nwStream != null)
                 {
-                    this.nwStream.Close();
-                    this.nwStream = (NetworkStream) null;
+                    nwStream.Close();
+                    nwStream = null;
                 }
-                if (this.tcpClient != null)
+                if (tcpClient != null)
                 {
-                    this.tcpClient.Close();
-                    this.tcpClient = (TcpClient) null;
+                    tcpClient.Close();
+                    tcpClient = null;
                 }
             }
-            this.isDisposed = true;
+            isDisposed = true;
         }
         #endregion
 
         #region Public Functions
-        public bool TransmitFile(string pathToFile) => this.transmit(Path.GetFileName(pathToFile), File.ReadAllBytes(pathToFile));
+        public bool TransmitFile(string pathToFile)
+        {
+            return Transmit(Path.GetFileName(pathToFile), File.ReadAllBytes(pathToFile));
+        }
 
-        public bool TransmitFile(string fileName, byte[] fileData) => this.transmit(fileName, fileData);
+        public bool TransmitFile(string fileName, byte[] fileData)
+        {
+            return Transmit(fileName, fileData);
+        }
         #endregion
 
         #region Private Functions
-        private bool transmit(string fileName, byte[] fileData)
+        private bool Transmit(string fileName, byte[] fileData)
         {
-            this.fireDebug("Transmitting {0} to {1}:{2}...", (object) fileName, (object) this.ipAddress, (object) this.port);
+            FireDebug("Transmitting {0} to {1}:{2}...", fileName, ipAddress, port);
             if (!Environment.OSVersion.ToString().ToLower().Contains("windows"))
-                this.compress = false;
+            {
+                compress = false;
+            }
+
             if (fileName.ToLower().EndsWith(".zip"))
-                this.compress = false;
-            this.tcpClient = new TcpClient();
+            {
+                compress = false;
+            }
+
+            tcpClient = new TcpClient();
             byte[] buffer1 = new byte[4];
-            this.fireDebug("   Connecting...");
+            FireDebug("   Connecting...");
             try
             {
-                this.tcpClient.Connect(this.ipAddress, 4299);
+                tcpClient.Connect(ipAddress, 4299);
             }
             catch (Exception ex)
             {
-                this.fireDebug("    -> Connection Failed:\n" + ex.Message);
-                this.lastError = "Connection Failed:\n" + ex.Message;
-                this.tcpClient.Close();
+                FireDebug("    -> Connection Failed:\n" + ex.Message);
+                lastError = "Connection Failed:\n" + ex.Message;
+                tcpClient.Close();
                 return false;
             }
-            this.nwStream = this.tcpClient.GetStream();
-            this.fireDebug("   Sending Magic...");
-            buffer1[0] = (byte) 72;
-            buffer1[1] = (byte) 65;
-            buffer1[2] = (byte) 88;
-            buffer1[3] = (byte) 88;
+            nwStream = tcpClient.GetStream();
+            FireDebug("   Sending Magic...");
+            buffer1[0] = 72;
+            buffer1[1] = 65;
+            buffer1[2] = 88;
+            buffer1[3] = 88;
             try
             {
-                this.nwStream.Write(buffer1, 0, 4);
+                nwStream.Write(buffer1, 0, 4);
             }
             catch (Exception ex)
             {
-                this.fireDebug("    -> Error sending Magic:\n" + ex.Message);
-                this.lastError = "Error sending Magic:\n" + ex.Message;
-                this.nwStream.Close();
-                this.tcpClient.Close();
+                FireDebug("    -> Error sending Magic:\n" + ex.Message);
+                lastError = "Error sending Magic:\n" + ex.Message;
+                nwStream.Close();
+                tcpClient.Close();
                 return false;
             }
-            this.fireDebug("   Sending Version Info...");
-            buffer1[0] = (byte) this.wiiloadMayor;
-            buffer1[1] = (byte) this.wiiloadMinor;
-            buffer1[2] = (byte) (fileName.Length + 2 >> 8 & (int) byte.MaxValue);
-            buffer1[3] = (byte) (fileName.Length + 2 & (int) byte.MaxValue);
+            FireDebug("   Sending Version Info...");
+            buffer1[0] = (byte)wiiloadMayor;
+            buffer1[1] = (byte)wiiloadMinor;
+            buffer1[2] = (byte)(fileName.Length + 2 >> 8 & byte.MaxValue);
+            buffer1[3] = (byte)(fileName.Length + 2 & byte.MaxValue);
             try
             {
-                this.nwStream.Write(buffer1, 0, 4);
+                nwStream.Write(buffer1, 0, 4);
             }
             catch (Exception ex)
             {
-                this.fireDebug("    -> Error sending Version Info:\n" + ex.Message);
-                this.lastError = "Error sending Version Info:\n" + ex.Message;
-                this.nwStream.Close();
-                this.tcpClient.Close();
+                FireDebug("    -> Error sending Version Info:\n" + ex.Message);
+                lastError = "Error sending Version Info:\n" + ex.Message;
+                nwStream.Close();
+                tcpClient.Close();
                 return false;
             }
             byte[] buffer2;
-            if (this.compress)
+            if (compress)
             {
-                this.fireDebug("   Compressing File...");
+                FireDebug("   Compressing File...");
                 try
                 {
-                    buffer2 = zlibWrapper.Compress(fileData);
+                    buffer2 = ZlibWrapper.Compress(fileData);
                 }
                 catch
                 {
-                    this.fireDebug("    -> Compression failed, continuing without compression...");
-                    this.compress = false;
+                    FireDebug("    -> Compression failed, continuing without compression...");
+                    compress = false;
                     buffer2 = fileData;
                     fileData = new byte[0];
                 }
@@ -262,88 +277,93 @@ namespace libWiiSharp
                 buffer2 = fileData;
                 fileData = new byte[0];
             }
-            this.fireDebug("   Sending Filesize...");
-            buffer1[0] = (byte) (buffer2.Length >> 24 & (int) byte.MaxValue);
-            buffer1[1] = (byte) (buffer2.Length >> 16 & (int) byte.MaxValue);
-            buffer1[2] = (byte) (buffer2.Length >> 8 & (int) byte.MaxValue);
-            buffer1[3] = (byte) (buffer2.Length & (int) byte.MaxValue);
+            FireDebug("   Sending Filesize...");
+            buffer1[0] = (byte)(buffer2.Length >> 24 & byte.MaxValue);
+            buffer1[1] = (byte)(buffer2.Length >> 16 & byte.MaxValue);
+            buffer1[2] = (byte)(buffer2.Length >> 8 & byte.MaxValue);
+            buffer1[3] = (byte)(buffer2.Length & byte.MaxValue);
             try
             {
-                this.nwStream.Write(buffer1, 0, 4);
+                nwStream.Write(buffer1, 0, 4);
             }
             catch (Exception ex)
             {
-                this.fireDebug("    -> Error sending Filesize:\n" + ex.Message);
-                this.lastError = "Error sending Filesize:\n" + ex.Message;
-                this.nwStream.Close();
-                this.tcpClient.Close();
+                FireDebug("    -> Error sending Filesize:\n" + ex.Message);
+                lastError = "Error sending Filesize:\n" + ex.Message;
+                nwStream.Close();
+                tcpClient.Close();
                 return false;
             }
-            if (this.protocol != Protocol.HAXX)
+            if (protocol != Protocol.HAXX)
             {
-                buffer1[0] = (byte) (fileData.Length >> 24 & (int) byte.MaxValue);
-                buffer1[1] = (byte) (fileData.Length >> 16 & (int) byte.MaxValue);
-                buffer1[2] = (byte) (fileData.Length >> 8 & (int) byte.MaxValue);
-                buffer1[3] = (byte) (fileData.Length & (int) byte.MaxValue);
+                buffer1[0] = (byte)(fileData.Length >> 24 & byte.MaxValue);
+                buffer1[1] = (byte)(fileData.Length >> 16 & byte.MaxValue);
+                buffer1[2] = (byte)(fileData.Length >> 8 & byte.MaxValue);
+                buffer1[3] = (byte)(fileData.Length & byte.MaxValue);
                 try
                 {
-                    this.nwStream.Write(buffer1, 0, 4);
+                    nwStream.Write(buffer1, 0, 4);
                 }
                 catch (Exception ex)
                 {
-                    this.fireDebug("    -> Error sending Filesize:\n" + ex.Message);
-                    this.lastError = "Error sending Filesize:\n" + ex.Message;
-                    this.nwStream.Close();
-                    this.tcpClient.Close();
+                    FireDebug("    -> Error sending Filesize:\n" + ex.Message);
+                    lastError = "Error sending Filesize:\n" + ex.Message;
+                    nwStream.Close();
+                    tcpClient.Close();
                     return false;
                 }
             }
-            this.fireDebug("   Sending File...");
+            FireDebug("   Sending File...");
             int offset = 0;
             int num1 = 0;
-            int num2 = buffer2.Length / this.Blocksize;
-            int num3 = buffer2.Length % this.Blocksize;
+            int num2 = buffer2.Length / Blocksize;
+            int num3 = buffer2.Length % Blocksize;
             try
             {
                 do
                 {
-                    this.fireProgress(++num1 * 100 / num2);
-                    this.nwStream.Write(buffer2, offset, this.Blocksize);
-                    offset += this.Blocksize;
+                    FireProgress(++num1 * 100 / num2);
+                    nwStream.Write(buffer2, offset, Blocksize);
+                    offset += Blocksize;
                 }
                 while (num1 < num2);
                 if (num3 > 0)
-                     this.nwStream.Write(buffer2, offset, buffer2.Length - offset);
+                {
+                    nwStream.Write(buffer2, offset, buffer2.Length - offset);
+                }
             }
             catch (Exception ex)
             {
-                this.fireDebug("    -> Error sending File:\n" + ex.Message);
-                this.lastError = "Error sending File:\n" + ex.Message;
-                this.nwStream.Close();
-                this.tcpClient.Close();
+                FireDebug("    -> Error sending File:\n" + ex.Message);
+                lastError = "Error sending File:\n" + ex.Message;
+                nwStream.Close();
+                tcpClient.Close();
                 return false;
             }
-            this.fireDebug("   Sending Arguments...");
+            FireDebug("   Sending Arguments...");
             byte[] buffer3 = new byte[fileName.Length + 2];
             for (int index = 0; index < fileName.Length; ++index)
-                buffer3[index] = (byte) fileName.ToCharArray()[index];
+            {
+                buffer3[index] = (byte)fileName.ToCharArray()[index];
+            }
+
             try
             {
-                this.nwStream.Write(buffer3, 0, buffer3.Length);
+                nwStream.Write(buffer3, 0, buffer3.Length);
             }
             catch (Exception ex)
             {
-                this.fireDebug("    -> Error sending Arguments:\n" + ex.Message);
-                this.lastError = "Error sending Arguments:\n" + ex.Message;
-                this.nwStream.Close();
-                this.tcpClient.Close();
+                FireDebug("    -> Error sending Arguments:\n" + ex.Message);
+                lastError = "Error sending Arguments:\n" + ex.Message;
+                nwStream.Close();
+                tcpClient.Close();
                 return false;
             }
-            this.nwStream.Close();
-            this.tcpClient.Close();
-            this.transmittedLength = buffer2.Length;
-            this.compressionRatio = !this.compress || fileData.Length == 0 ? 0 : buffer2.Length * 100 / fileData.Length;
-            this.fireDebug("Transmitting {0} to {1}:{2} Finished...", (object) fileName, (object) this.ipAddress, (object) this.port);
+            nwStream.Close();
+            tcpClient.Close();
+            transmittedLength = buffer2.Length;
+            compressionRatio = !compress || fileData.Length == 0 ? 0 : buffer2.Length * 100 / fileData.Length;
+            FireDebug("Transmitting {0} to {1}:{2} Finished...", fileName, ipAddress, port);
             return true;
         }
         #endregion
@@ -359,28 +379,34 @@ namespace libWiiSharp
         /// </summary>
         public event EventHandler<MessageEventArgs> Debug;
 
-        private void fireDebug(string debugMessage, params object[] args)
+        private void FireDebug(string debugMessage, params object[] args)
         {
-            EventHandler<MessageEventArgs> debug = this.Debug;
+            EventHandler<MessageEventArgs> debug = Debug;
             if (debug == null)
+            {
                 return;
+            }
+
             debug(new object(), new MessageEventArgs(string.Format(debugMessage, args)));
         }
 
-        private void fireProgress(int progressPercentage)
+        private void FireProgress(int progressPercentage)
         {
-            EventHandler<ProgressChangedEventArgs> progress = this.Progress;
+            EventHandler<ProgressChangedEventArgs> progress = Progress;
             if (progress == null)
+            {
                 return;
-            progress(new object(), new ProgressChangedEventArgs(progressPercentage, (object) string.Empty));
+            }
+
+            progress(new object(), new ProgressChangedEventArgs(progressPercentage, string.Empty));
         }
         #endregion
     }
 
-    internal class zlibWrapper
+    internal class ZlibWrapper
     {
         [DllImport("zlib1.dll")]
-        private static extern zlibWrapper.ZLibError compress2(
+        private static extern ZlibWrapper.ZLibError Compress2(
           byte[] dest,
           ref int destLength,
           byte[] source,
@@ -391,9 +417,12 @@ namespace libWiiSharp
         {
             byte[] array = new byte[inFile.Length + 64];
             int destLength = -1;
-            zlibWrapper.ZLibError zlibError = zlibWrapper.compress2(array, ref destLength, inFile, inFile.Length, 6);
-            if (zlibError != zlibWrapper.ZLibError.Z_OK || destLength <= -1 || destLength >= inFile.Length)
+            ZlibWrapper.ZLibError zlibError = ZlibWrapper.Compress2(array, ref destLength, inFile, inFile.Length, 6);
+            if (zlibError != ZlibWrapper.ZLibError.Z_OK || destLength <= -1 || destLength >= inFile.Length)
+            {
                 throw new Exception("An error occured while compressing! Code: " + zlibError.ToString());
+            }
+
             Array.Resize<byte>(ref array, destLength);
             return array;
         }

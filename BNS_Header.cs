@@ -23,12 +23,12 @@ namespace libWiiSharp
 {
     internal class BNS_Header
     {
-        private byte[] magic = new byte[4]
+        private readonly byte[] magic = new byte[4]
         {
-            (byte) 66,
-            (byte) 78,
-            (byte) 83,
-            (byte) 32
+             66,
+             78,
+             83,
+             32
         };
         private uint flags = 4278124800;
         private uint fileSize = 315584;
@@ -41,80 +41,82 @@ namespace libWiiSharp
 
         public uint DataOffset
         {
-            get => this.dataOffset;
-            set => this.dataOffset = value;
+            get => dataOffset;
+            set => dataOffset = value;
         }
 
         public uint InfoLength
         {
-            get => this.infoLength;
-            set => this.infoLength = value;
+            get => infoLength;
+            set => infoLength = value;
         }
 
         public ushort Size
         {
-            get => this.size;
-            set => this.size = value;
+            get => size;
+            set => size = value;
         }
 
         public uint DataLength
         {
-            get => this.dataLength;
-            set => this.dataLength = value;
+            get => dataLength;
+            set => dataLength = value;
         }
 
         public uint FileSize
         {
-            get => this.fileSize;
-            set => this.fileSize = value;
+            get => fileSize;
+            set => fileSize = value;
         }
 
         public void Write(Stream outStream)
         {
-          outStream.Write(this.magic, 0, this.magic.Length);
-          byte[] bytes1 = BitConverter.GetBytes(this.flags);
-          Array.Reverse((Array) bytes1);
-          outStream.Write(bytes1, 0, bytes1.Length);
-          byte[] bytes2 = BitConverter.GetBytes(this.fileSize);
-          Array.Reverse((Array) bytes2);
-          outStream.Write(bytes2, 0, bytes2.Length);
-          byte[] bytes3 = BitConverter.GetBytes(this.size);
-          Array.Reverse((Array) bytes3);
-          outStream.Write(bytes3, 0, bytes3.Length);
-          byte[] bytes4 = BitConverter.GetBytes(this.chunkCount);
-          Array.Reverse((Array) bytes4);
-          outStream.Write(bytes4, 0, bytes4.Length);
-          byte[] bytes5 = BitConverter.GetBytes(this.infoOffset);
-          Array.Reverse((Array) bytes5);
-          outStream.Write(bytes5, 0, bytes5.Length);
-          byte[] bytes6 = BitConverter.GetBytes(this.infoLength);
-          Array.Reverse((Array) bytes6);
-          outStream.Write(bytes6, 0, bytes6.Length);
-          byte[] bytes7 = BitConverter.GetBytes(this.dataOffset);
-          Array.Reverse((Array) bytes7);
-          outStream.Write(bytes7, 0, bytes7.Length);
-          byte[] bytes8 = BitConverter.GetBytes(this.dataLength);
-          Array.Reverse((Array) bytes8);
-          outStream.Write(bytes8, 0, bytes8.Length);
+            outStream.Write(magic, 0, magic.Length);
+            byte[] bytes1 = BitConverter.GetBytes(flags);
+            Array.Reverse(bytes1);
+            outStream.Write(bytes1, 0, bytes1.Length);
+            byte[] bytes2 = BitConverter.GetBytes(fileSize);
+            Array.Reverse(bytes2);
+            outStream.Write(bytes2, 0, bytes2.Length);
+            byte[] bytes3 = BitConverter.GetBytes(size);
+            Array.Reverse(bytes3);
+            outStream.Write(bytes3, 0, bytes3.Length);
+            byte[] bytes4 = BitConverter.GetBytes(chunkCount);
+            Array.Reverse(bytes4);
+            outStream.Write(bytes4, 0, bytes4.Length);
+            byte[] bytes5 = BitConverter.GetBytes(infoOffset);
+            Array.Reverse(bytes5);
+            outStream.Write(bytes5, 0, bytes5.Length);
+            byte[] bytes6 = BitConverter.GetBytes(infoLength);
+            Array.Reverse(bytes6);
+            outStream.Write(bytes6, 0, bytes6.Length);
+            byte[] bytes7 = BitConverter.GetBytes(dataOffset);
+            Array.Reverse(bytes7);
+            outStream.Write(bytes7, 0, bytes7.Length);
+            byte[] bytes8 = BitConverter.GetBytes(dataLength);
+            Array.Reverse(bytes8);
+            outStream.Write(bytes8, 0, bytes8.Length);
         }
 
         public void Read(Stream input)
         {
             BinaryReader binaryReader = new BinaryReader(input);
-            if (!Shared.CompareByteArrays(this.magic, binaryReader.ReadBytes(4)))
+            if (!Shared.CompareByteArrays(magic, binaryReader.ReadBytes(4)))
             {
                 binaryReader.BaseStream.Seek(28L, SeekOrigin.Current);
-                if (!Shared.CompareByteArrays(this.magic, binaryReader.ReadBytes(4)))
+                if (!Shared.CompareByteArrays(magic, binaryReader.ReadBytes(4)))
+                {
                     throw new Exception("This is not a valid BNS audio file!");
+                }
             }
-        this.flags = Shared.Swap(binaryReader.ReadUInt32());
-        this.fileSize = Shared.Swap(binaryReader.ReadUInt32());
-        this.size = Shared.Swap(binaryReader.ReadUInt16());
-        this.chunkCount = Shared.Swap(binaryReader.ReadUInt16());
-        this.infoOffset = Shared.Swap(binaryReader.ReadUInt32());
-        this.infoLength = Shared.Swap(binaryReader.ReadUInt32());
-        this.dataOffset = Shared.Swap(binaryReader.ReadUInt32());
-        this.dataLength = Shared.Swap(binaryReader.ReadUInt32());
+            flags = Shared.Swap(binaryReader.ReadUInt32());
+            fileSize = Shared.Swap(binaryReader.ReadUInt32());
+            size = Shared.Swap(binaryReader.ReadUInt16());
+            chunkCount = Shared.Swap(binaryReader.ReadUInt16());
+            infoOffset = Shared.Swap(binaryReader.ReadUInt32());
+            infoLength = Shared.Swap(binaryReader.ReadUInt32());
+            dataOffset = Shared.Swap(binaryReader.ReadUInt32());
+            dataLength = Shared.Swap(binaryReader.ReadUInt32());
         }
     }
 }

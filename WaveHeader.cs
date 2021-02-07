@@ -9,30 +9,32 @@ using System.IO;
 
 namespace libWiiSharp
 {
-  internal class WaveHeader
-  {
-    private uint headerId = 1380533830;
-    private uint fileSize = 12;
-    private uint format = 1463899717;
-
-    public uint FileSize
+    internal class WaveHeader
     {
-      get => this.fileSize;
-      set => this.fileSize = value;
-    }
+        private readonly uint headerId = 1380533830;
+        private uint fileSize = 12;
+        private readonly uint format = 1463899717;
 
-    public void Write(BinaryWriter writer)
-    {
-      writer.Write(Shared.Swap(this.headerId));
-      writer.Write(this.fileSize);
-      writer.Write(Shared.Swap(this.format));
-    }
+        public uint FileSize
+        {
+            get => fileSize;
+            set => fileSize = value;
+        }
 
-    public void Read(BinaryReader reader)
-    {
-      this.fileSize = (int) Shared.Swap(reader.ReadUInt32()) == (int) this.headerId ? reader.ReadUInt32() : throw new Exception("Not a valid RIFF Wave file!");
-      if ((int) Shared.Swap(reader.ReadUInt32()) != (int) this.format)
-        throw new Exception("Not a valid RIFF Wave file!");
+        public void Write(BinaryWriter writer)
+        {
+            writer.Write(Shared.Swap(headerId));
+            writer.Write(fileSize);
+            writer.Write(Shared.Swap(format));
+        }
+
+        public void Read(BinaryReader reader)
+        {
+            fileSize = (int)Shared.Swap(reader.ReadUInt32()) == (int)headerId ? reader.ReadUInt32() : throw new Exception("Not a valid RIFF Wave file!");
+            if ((int)Shared.Swap(reader.ReadUInt32()) != (int)format)
+            {
+                throw new Exception("Not a valid RIFF Wave file!");
+            }
+        }
     }
-  }
 }

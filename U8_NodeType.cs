@@ -6,9 +6,9 @@
 
 namespace libWiiSharp
 {
-  public enum U8_NodeType : ushort
-  {
-    File = 0,
-    Directory = 256, // 0x0100
-  }
+    public enum U8_NodeType : ushort
+    {
+        File = 0,
+        Directory = 256, // 0x0100
+    }
 }

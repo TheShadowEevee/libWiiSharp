@@ -8,12 +8,15 @@ using System;
 
 namespace libWiiSharp
 {
-  public class MessageEventArgs : EventArgs
-  {
-    private string message;
+    public class MessageEventArgs : EventArgs
+    {
+        private readonly string message;
 
-    public string Message => this.message;
+        public string Message => message;
 
-    public MessageEventArgs(string message) => this.message = message;
-  }
+        public MessageEventArgs(string message)
+        {
+            this.message = message;
+        }
+    }
 }

@@ -20,11 +20,17 @@ namespace libWiiSharp
 {
     public class CommonKey
     {
-        private static string standardKey = "ebe42a225e8593e448d9c5457381aaf7";
-        private static string koreanKey = "63b82bb4f4614e2e13f2fefbba4c9b7e";
+        private static readonly string standardKey = "ebe42a225e8593e448d9c5457381aaf7";
+        private static readonly string koreanKey = "63b82bb4f4614e2e13f2fefbba4c9b7e";
 
-        public static byte[] GetStandardKey() => Shared.HexStringToByteArray(CommonKey.standardKey);
+        public static byte[] GetStandardKey()
+        {
+            return Shared.HexStringToByteArray(CommonKey.standardKey);
+        }
 
-        public static byte[] GetKoreanKey() => Shared.HexStringToByteArray(CommonKey.koreanKey);
+        public static byte[] GetKoreanKey()
+        {
+            return Shared.HexStringToByteArray(CommonKey.koreanKey);
+        }
     }
 }

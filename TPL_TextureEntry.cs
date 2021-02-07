@@ -9,27 +9,27 @@ using System.IO;
 
 namespace libWiiSharp
 {
-  public class TPL_TextureEntry
-  {
-    private uint textureHeaderOffset;
-    private uint paletteHeaderOffset;
-
-    public uint TextureHeaderOffset
+    public class TPL_TextureEntry
     {
-      get => this.textureHeaderOffset;
-      set => this.textureHeaderOffset = value;
-    }
+        private uint textureHeaderOffset;
+        private uint paletteHeaderOffset;
 
-    public uint PaletteHeaderOffset
-    {
-      get => this.paletteHeaderOffset;
-      set => this.paletteHeaderOffset = value;
-    }
+        public uint TextureHeaderOffset
+        {
+            get => textureHeaderOffset;
+            set => textureHeaderOffset = value;
+        }
 
-    public void Write(Stream writeStream)
-    {
-      writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.textureHeaderOffset)), 0, 4);
-      writeStream.Write(BitConverter.GetBytes(Shared.Swap(this.paletteHeaderOffset)), 0, 4);
+        public uint PaletteHeaderOffset
+        {
+            get => paletteHeaderOffset;
+            set => paletteHeaderOffset = value;
+        }
+
+        public void Write(Stream writeStream)
+        {
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(textureHeaderOffset)), 0, 4);
+            writeStream.Write(BitConverter.GetBytes(Shared.Swap(paletteHeaderOffset)), 0, 4);
+        }
     }
-  }
 }

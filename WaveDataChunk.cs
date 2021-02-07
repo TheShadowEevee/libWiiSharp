@@ -9,35 +9,35 @@ using System.IO;
 
 namespace libWiiSharp
 {
-  internal class WaveDataChunk
-  {
-    private uint dataId = 1684108385;
-    private uint dataSize = 8;
-    private byte[] data;
-
-    public uint DataSize => this.dataSize;
-
-    public byte[] Data
+    internal class WaveDataChunk
     {
-      get => this.data;
-      set
-      {
-        this.data = value;
-        this.dataSize = (uint) this.data.Length;
-      }
-    }
+        private readonly uint dataId = 1684108385;
+        private uint dataSize = 8;
+        private byte[] data;
 
-    public void Write(BinaryWriter writer)
-    {
-      writer.Write(Shared.Swap(this.dataId));
-      writer.Write(this.dataSize);
-      writer.Write(this.data, 0, this.data.Length);
-    }
+        public uint DataSize => dataSize;
 
-    public void Read(BinaryReader reader)
-    {
-      this.dataSize = (int) Shared.Swap(reader.ReadUInt32()) == (int) this.dataId ? reader.ReadUInt32() : throw new Exception("Wrong chunk ID!");
-      this.data = reader.ReadBytes((int) this.dataSize);
+        public byte[] Data
+        {
+            get => data;
+            set
+            {
+                data = value;
+                dataSize = (uint)data.Length;
+            }
+        }
+
+        public void Write(BinaryWriter writer)
+        {
+            writer.Write(Shared.Swap(dataId));
+            writer.Write(dataSize);
+            writer.Write(data, 0, data.Length);
+        }
+
+        public void Read(BinaryReader reader)
+        {
+            dataSize = (int)Shared.Swap(reader.ReadUInt32()) == (int)dataId ? reader.ReadUInt32() : throw new Exception("Wrong chunk ID!");
+            data = reader.ReadBytes((int)dataSize);
+        }
     }
-  }
 }
