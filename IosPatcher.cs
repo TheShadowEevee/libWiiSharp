@@ -1,6 +1,6 @@
 ﻿/* This file is part of libWiiSharp
- * Copyright (C) 2009 Leathl
- * Copyright (C) 2020 Github Contributors
+*Copyright(C) 2009 Leathl
+* Copyright(C) 2020 - 2021 Github Contributors
  * 
  * libWiiSharp is free software: you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as published
