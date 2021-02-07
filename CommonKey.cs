@@ -25,12 +25,12 @@ namespace libWiiSharp
 
         public static byte[] GetStandardKey()
         {
-            return Shared.HexStringToByteArray(CommonKey.standardKey);
+            return Shared.HexStringToByteArray(standardKey);
         }
 
         public static byte[] GetKoreanKey()
         {
-            return Shared.HexStringToByteArray(CommonKey.koreanKey);
+            return Shared.HexStringToByteArray(koreanKey);
         }
     }
 }

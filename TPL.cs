@@ -140,7 +140,7 @@ namespace libWiiSharp
           TPL_TextureFormat tplFormat,
           TPL_PaletteFormat paletteFormat = TPL_PaletteFormat.RGB5A3)
         {
-            return TPL.FromImages(new string[1] { pathToImage }, new TPL_TextureFormat[1]
+            return FromImages(new string[1] { pathToImage }, new TPL_TextureFormat[1]
             {
         tplFormat
             }, new TPL_PaletteFormat[1] { paletteFormat });
@@ -151,7 +151,7 @@ namespace libWiiSharp
           TPL_TextureFormat tplFormat,
           TPL_PaletteFormat paletteFormat = TPL_PaletteFormat.RGB5A3)
         {
-            return TPL.FromImages(new Image[1] { img }, new TPL_TextureFormat[1]
+            return FromImages(new Image[1] { img }, new TPL_TextureFormat[1]
             {
         tplFormat
             }, new TPL_PaletteFormat[1] { paletteFormat });

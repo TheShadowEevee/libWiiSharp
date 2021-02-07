@@ -417,8 +417,8 @@ namespace libWiiSharp
         {
             byte[] array = new byte[inFile.Length + 64];
             int destLength = -1;
-            ZlibWrapper.ZLibError zlibError = ZlibWrapper.Compress2(array, ref destLength, inFile, inFile.Length, 6);
-            if (zlibError != ZlibWrapper.ZLibError.Z_OK || destLength <= -1 || destLength >= inFile.Length)
+            ZlibWrapper.ZLibError zlibError = Compress2(array, ref destLength, inFile, inFile.Length, 6);
+            if (zlibError != ZLibError.Z_OK || destLength <= -1 || destLength >= inFile.Length)
             {
                 throw new Exception("An error occured while compressing! Code: " + zlibError.ToString());
             }

@@ -212,7 +212,7 @@ namespace libWiiSharp
 
         public static WAD Load(string pathToWad)
         {
-            return WAD.Load(File.ReadAllBytes(pathToWad));
+            return Load(File.ReadAllBytes(pathToWad));
         }
 
         public static WAD Load(byte[] wadFile)
@@ -272,7 +272,7 @@ namespace libWiiSharp
                 string path = contentDir + Path.DirectorySeparatorChar.ToString() + (flag ? tmd.Contents[index].ContentID.ToString("x8") : tmd.Contents[index].Index.ToString("x8")) + ".app";
                 contents[index] = File.ReadAllBytes(path);
             }
-            return WAD.Create(cert, tik, tmd, contents);
+            return Create(cert, tik, tmd, contents);
         }
 
         public static WAD Create(
@@ -309,7 +309,7 @@ namespace libWiiSharp
                 string path = contentDir + Path.DirectorySeparatorChar.ToString() + (flag ? tmd.Contents[index].ContentID.ToString("x8") : tmd.Contents[index].Index.ToString("x8")) + ".app";
                 contents[index] = File.ReadAllBytes(path);
             }
-            return WAD.Create(cert, tik, tmd, contents);
+            return Create(cert, tik, tmd, contents);
         }
 
         public static WAD Create(byte[] cert, byte[] tik, byte[] tmd, byte[][] contents)
@@ -320,7 +320,7 @@ namespace libWiiSharp
             Ticket tik1 = ticket;
             TMD tmd2 = tmd1;
             byte[][] contents1 = contents;
-            return WAD.Create(cert1, tik1, tmd2, contents1);
+            return Create(cert1, tik1, tmd2, contents1);
         }
 
         public static WAD Create(CertificateChain cert, Ticket tik, TMD tmd, byte[][] contents)

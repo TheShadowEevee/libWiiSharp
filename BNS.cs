@@ -731,6 +731,7 @@ namespace libWiiSharp
     }
     internal class BNS_Header
     {
+        //Private Variables
         private readonly byte[] magic = new byte[4]
             {
                  66,
@@ -747,6 +748,7 @@ namespace libWiiSharp
         private uint dataOffset = 192;
         private uint dataLength = 315392;
 
+        //Public Variables
         public uint DataOffset
         {
             get => dataOffset;

@@ -111,7 +111,7 @@ namespace libWiiSharp
 
         public static bool IsU8(string pathToFile)
         {
-            return U8.IsU8(File.ReadAllBytes(pathToFile));
+            return IsU8(File.ReadAllBytes(pathToFile));
         }
 
         public static bool IsU8(byte[] file)
@@ -124,7 +124,7 @@ namespace libWiiSharp
                     file1[index] = file[index];
                 }
 
-                return U8.IsU8(new Lz77().Decompress(file1));
+                return IsU8(new Lz77().Decompress(file1));
             }
             Headers.HeaderType headerType = Headers.DetectHeader(file);
             return Shared.Swap(BitConverter.ToUInt32(file, (int)headerType)) == 1437218861U;
@@ -132,7 +132,7 @@ namespace libWiiSharp
 
         public static U8 Load(string pathToU8)
         {
-            return U8.Load(File.ReadAllBytes(pathToU8));
+            return Load(File.ReadAllBytes(pathToU8));
         }
 
         public static U8 Load(byte[] u8File)

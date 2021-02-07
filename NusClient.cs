@@ -117,13 +117,13 @@ namespace libWiiSharp
                 Directory.CreateDirectory(Path.GetDirectoryName(savePath));
             }
 
-            if (System.IO.File.Exists(savePath))
+            if (File.Exists(savePath))
             {
-                System.IO.File.Delete(savePath);
+                File.Delete(savePath);
             }
 
             byte[] bytes = PrivDownloadSingleContent(titleId, titleVersion, contentId);
-            System.IO.File.WriteAllBytes(savePath, bytes);
+            File.WriteAllBytes(savePath, bytes);
         }
 
         private byte[] PrivDownloadSingleContent(string titleId, string titleVersion, string contentId)
@@ -329,7 +329,7 @@ namespace libWiiSharp
                     string str3 = outputDir;
                     contentId = tmd.Contents[index1].ContentID;
                     string str4 = contentId.ToString("x8");
-                    if (System.IO.File.Exists(str3 + str4))
+                    if (File.Exists(str3 + str4))
                     {
                         FireDebug("   Using Local File, Skipping...");
                         continue;
@@ -369,7 +369,7 @@ namespace libWiiSharp
                     string str3 = outputDir;
                     contentId = tmd.Contents[contentIndex].ContentID;
                     string str4 = contentId.ToString("x8");
-                    byte[] array = DecryptContent(System.IO.File.ReadAllBytes(str3 + str4), contentIndex, tik, tmd);
+                    byte[] array = DecryptContent(File.ReadAllBytes(str3 + str4), contentIndex, tik, tmd);
                     Array.Resize<byte>(ref array, (int)tmd.Contents[contentIndex].Size);
                     if (!Shared.CompareByteArrays(shA1.ComputeHash(array), tmd.Contents[contentIndex].Hash))
                     {
@@ -379,7 +379,7 @@ namespace libWiiSharp
                     string str5 = outputDir;
                     contentId = tmd.Contents[contentIndex].ContentID;
                     string str6 = contentId.ToString("x8");
-                    System.IO.File.WriteAllBytes(str5 + str6 + ".app", array);
+                    File.WriteAllBytes(str5 + str6 + ".app", array);
                 }
                 shA1.Clear();
             }
@@ -395,7 +395,7 @@ namespace libWiiSharp
                     string str3 = outputDir;
                     contentId = tmd.Contents[index1].ContentID;
                     string str4 = contentId.ToString("x8");
-                    byte[] numArray2 = System.IO.File.ReadAllBytes(str3 + str4 + ".app");
+                    byte[] numArray2 = File.ReadAllBytes(str3 + str4 + ".app");
                     numArray1[index2] = numArray2;
                 }
                 FireDebug("   Creating WAD...");
@@ -406,9 +406,9 @@ namespace libWiiSharp
                 FireDebug("   Deleting Encrypted Contents...");
                 for (int index = 0; index < strArray1.Length; ++index)
                 {
-                    if (System.IO.File.Exists(outputDir + strArray1[index]))
+                    if (File.Exists(outputDir + strArray1[index]))
                     {
-                        System.IO.File.Delete(outputDir + strArray1[index]);
+                        File.Delete(outputDir + strArray1[index]);
                     }
                 }
             }
@@ -417,17 +417,17 @@ namespace libWiiSharp
                 FireDebug("   Deleting Decrypted Contents...");
                 for (int index = 0; index < strArray1.Length; ++index)
                 {
-                    if (System.IO.File.Exists(outputDir + strArray1[index] + ".app"))
+                    if (File.Exists(outputDir + strArray1[index] + ".app"))
                     {
-                        System.IO.File.Delete(outputDir + strArray1[index] + ".app");
+                        File.Delete(outputDir + strArray1[index] + ".app");
                     }
                 }
             }
             if (!flag2 && !flag1)
             {
                 FireDebug("   Deleting TMD and Ticket...");
-                System.IO.File.Delete(outputDir + str2);
-                System.IO.File.Delete(outputDir + "cetk");
+                File.Delete(outputDir + str2);
+                File.Delete(outputDir + "cetk");
             }
             FireDebug("Downloading Title {0} v{1} Finished...", titleId, string.IsNullOrEmpty(titleVersion) ? "[Latest]" : titleVersion);
             FireProgress(100);

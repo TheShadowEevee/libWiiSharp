@@ -115,7 +115,7 @@ namespace libWiiSharp
 
         public static long AddPadding(long value)
         {
-            return Shared.AddPadding(value, 64);
+            return AddPadding(value, 64);
         }
 
         public static long AddPadding(long value, int padding)
@@ -130,7 +130,7 @@ namespace libWiiSharp
 
         public static int AddPadding(int value)
         {
-            return Shared.AddPadding(value, 64);
+            return AddPadding(value, 64);
         }
 
         public static int AddPadding(int value, int padding)

@@ -34,17 +34,17 @@ namespace libWiiSharp
         //private int matchPosition;
         //private int matchLength;
 
-        public static uint Lz77Magic => Lz77.lz77Magic;
+        public static uint Lz77Magic => lz77Magic;
 
         public static bool IsLz77Compressed(string file)
         {
-            return Lz77.IsLz77Compressed(File.ReadAllBytes(file));
+            return IsLz77Compressed(File.ReadAllBytes(file));
         }
 
         public static bool IsLz77Compressed(byte[] file)
         {
             Headers.HeaderType headerType = Headers.DetectHeader(file);
-            return (int)Shared.Swap(BitConverter.ToUInt32(file, (int)headerType)) == (int)Lz77.lz77Magic;
+            return (int)Shared.Swap(BitConverter.ToUInt32(file, (int)headerType)) == (int)lz77Magic;
         }
 
         public static bool IsLz77Compressed(Stream file)
@@ -53,7 +53,7 @@ namespace libWiiSharp
             byte[] buffer = new byte[4];
             file.Seek((long)headerType, SeekOrigin.Begin);
             file.Read(buffer, 0, buffer.Length);
-            return (int)Shared.Swap(BitConverter.ToUInt32(buffer, 0)) == (int)Lz77.lz77Magic;
+            return (int)Shared.Swap(BitConverter.ToUInt32(buffer, 0)) == (int)lz77Magic;
         }
 
         public void Compress(string inFile, string outFile)
@@ -120,7 +120,7 @@ namespace libWiiSharp
 
         private Stream PrivDecompress(Stream inFile)
         {
-            if (!Lz77.IsLz77Compressed(inFile))
+            if (!IsLz77Compressed(inFile))
             {
                 return inFile;
             }
@@ -131,7 +131,7 @@ namespace libWiiSharp
             byte[] buffer = new byte[8];
             inFile.Seek((long)headerType, SeekOrigin.Begin);
             inFile.Read(buffer, 0, 8);
-            if ((int)Shared.Swap(BitConverter.ToUInt32(buffer, 0)) != (int)Lz77.lz77Magic)
+            if ((int)Shared.Swap(BitConverter.ToUInt32(buffer, 0)) != (int)lz77Magic)
             {
                 inFile.Dispose();
                 throw new Exception("Invaild Magic!");

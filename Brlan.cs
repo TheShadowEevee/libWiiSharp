@@ -24,16 +24,33 @@ namespace libWiiSharp
 {
     public class Brlan
     {
+        #region Public Functions
+        /// <summary>
+        /// Gets all TPLs that are required by the brlan (Frame Animation).
+        /// </summary>
+        /// <param name="pathTobrlan"></param>
+        /// <returns></returns>
         public static string[] GetBrlanTpls(string pathTobrlan)
         {
-            return Brlan.PrivGetBrlanTpls(File.ReadAllBytes(pathTobrlan));
+            return PrivGetBrlanTpls(File.ReadAllBytes(pathTobrlan));
         }
 
+        /// <summary>
+        /// Gets all TPLs that are required by the brlan (Frame Animation).
+        /// </summary>
+        /// <param name="brlanFile"></param>
+        /// <returns></returns>
         public static string[] GetBrlanTpls(byte[] brlanFile)
         {
-            return Brlan.PrivGetBrlanTpls(brlanFile);
+            return PrivGetBrlanTpls(brlanFile);
         }
 
+        /// <summary>
+        /// Gets all TPLs that are required by the brlan (Frame Animation).
+        /// </summary>
+        /// <param name="wad"></param>
+        /// <param name="banner"></param>
+        /// <returns></returns>
         public static string[] GetBrlanTpls(WAD wad, bool banner)
         {
             if (!wad.HasBanner)
@@ -57,7 +74,7 @@ namespace libWiiSharp
                     {
                         if (u8.StringTable[index2].ToLower() == str + "_start.brlan" || u8.StringTable[index2].ToLower() == str + "_loop.brlan" || u8.StringTable[index2].ToLower() == str + ".brlan")
                         {
-                            a = Shared.MergeStringArrays(a, Brlan.GetBrlanTpls(u8.Data[index2]));
+                            a = Shared.MergeStringArrays(a, GetBrlanTpls(u8.Data[index2]));
                         }
                     }
                     return a;
@@ -65,11 +82,13 @@ namespace libWiiSharp
             }
             return new string[0];
         }
+        #endregion
 
+        #region Private Functions
         private static string[] PrivGetBrlanTpls(byte[] brlanFile)
         {
             List<string> stringList = new List<string>();
-            int numOfTpls = Brlan.GetNumOfTpls(brlanFile);
+            int numOfTpls = GetNumOfTpls(brlanFile);
             int index1 = 36 + numOfTpls * 4;
             for (int index2 = 0; index2 < numOfTpls; ++index2)
             {
@@ -96,5 +115,6 @@ namespace libWiiSharp
         {
             return Shared.Swap(BitConverter.ToUInt16(brlanFile, 28));
         }
+        #endregion
     }
 }

@@ -148,7 +148,7 @@ namespace libWiiSharp
 
         public static Ticket Load(string pathToTicket)
         {
-            return Ticket.Load(File.ReadAllBytes(pathToTicket));
+            return Load(File.ReadAllBytes(pathToTicket));
         }
 
         public static Ticket Load(byte[] ticket)

@@ -24,16 +24,33 @@ namespace libWiiSharp
 {
     public class Brlyt
     {
+        #region Public Functions
+        /// <summary>
+        /// Gets all TPLs that are required by the brlyt.
+        /// </summary>
+        /// <param name="pathToBrlyt"></param>
+        /// <returns></returns>
         public static string[] GetBrlytTpls(string pathToBrlyt)
         {
             return PrivGetBrlytTpls(File.ReadAllBytes(pathToBrlyt));
         }
 
+        /// <summary>
+        /// Gets all TPLs that are required by the brlyt.
+        /// </summary>
+        /// <param name="brlytFile"></param>
+        /// <returns></returns>
         public static string[] GetBrlytTpls(byte[] brlytFile)
         {
             return PrivGetBrlytTpls(brlytFile);
         }
 
+        /// <summary>
+        /// Gets all TPLs that are required by the brlyt.
+        /// </summary>
+        /// <param name="wad"></param>
+        /// <param name="banner"></param>
+        /// <returns></returns>
         public static string[] GetBrlytTpls(WAD wad, bool banner)
         {
             if (!wad.HasBanner)
@@ -57,7 +74,7 @@ namespace libWiiSharp
                     {
                         if (u8.StringTable[index2].ToLower() == str + ".brlyt")
                         {
-                            a = Shared.MergeStringArrays(a, Brlyt.GetBrlytTpls(u8.Data[index2]));
+                            a = Shared.MergeStringArrays(a, GetBrlytTpls(u8.Data[index2]));
                         }
                     }
                     return a;
@@ -65,11 +82,13 @@ namespace libWiiSharp
             }
             return new string[0];
         }
+        #endregion
 
+        #region Private Functions
         private static string[] PrivGetBrlytTpls(byte[] brlytFile)
         {
             List<string> stringList = new List<string>();
-            int numOfTpls = Brlyt.GetNumOfTpls(brlytFile);
+            int numOfTpls = GetNumOfTpls(brlytFile);
             int index1 = 48 + numOfTpls * 8;
             for (int index2 = 0; index2 < numOfTpls; ++index2)
             {
@@ -96,5 +115,6 @@ namespace libWiiSharp
         {
             return Shared.Swap(BitConverter.ToUInt16(brlytFile, 44));
         }
+        #endregion
     }
 }

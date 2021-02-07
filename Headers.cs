@@ -55,7 +55,7 @@ namespace libWiiSharp
         /// <returns></returns>
         public static Headers.HeaderType DetectHeader(string pathToFile)
         {
-            return Headers.DetectHeader(File.ReadAllBytes(pathToFile));
+            return DetectHeader(File.ReadAllBytes(pathToFile));
         }
 
         /// <summary>
@@ -65,17 +65,17 @@ namespace libWiiSharp
         /// <returns></returns>
         public static Headers.HeaderType DetectHeader(byte[] file)
         {
-            if (file.Length > 68 && (int)Shared.Swap(BitConverter.ToUInt32(file, 64)) == (int)Headers.imetMagic)
+            if (file.Length > 68 && (int)Shared.Swap(BitConverter.ToUInt32(file, 64)) == (int)imetMagic)
             {
-                return Headers.HeaderType.ShortIMET;
+                return HeaderType.ShortIMET;
             }
 
-            if (file.Length > 132 && (int)Shared.Swap(BitConverter.ToUInt32(file, 128)) == (int)Headers.imetMagic)
+            if (file.Length > 132 && (int)Shared.Swap(BitConverter.ToUInt32(file, 128)) == (int)imetMagic)
             {
-                return Headers.HeaderType.IMET;
+                return HeaderType.IMET;
             }
 
-            return file.Length > 4 && (int)Shared.Swap(BitConverter.ToUInt32(file, 0)) == (int)Headers.imd5Magic ? Headers.HeaderType.IMD5 : Headers.HeaderType.None;
+            return file.Length > 4 && (int)Shared.Swap(BitConverter.ToUInt32(file, 0)) == (int)imd5Magic ? HeaderType.IMD5 : HeaderType.None;
         }
 
         /// <summary>
@@ -90,30 +90,30 @@ namespace libWiiSharp
             {
                 file.Seek(64L, SeekOrigin.Begin);
                 file.Read(buffer, 0, buffer.Length);
-                if ((int)Shared.Swap(BitConverter.ToUInt32(buffer, 0)) == (int)Headers.imetMagic)
+                if ((int)Shared.Swap(BitConverter.ToUInt32(buffer, 0)) == (int)imetMagic)
                 {
-                    return Headers.HeaderType.ShortIMET;
+                    return HeaderType.ShortIMET;
                 }
             }
             if (file.Length > 132L)
             {
                 file.Seek(128L, SeekOrigin.Begin);
                 file.Read(buffer, 0, buffer.Length);
-                if ((int)Shared.Swap(BitConverter.ToUInt32(buffer, 0)) == (int)Headers.imetMagic)
+                if ((int)Shared.Swap(BitConverter.ToUInt32(buffer, 0)) == (int)imetMagic)
                 {
-                    return Headers.HeaderType.IMET;
+                    return HeaderType.IMET;
                 }
             }
             if (file.Length > 4L)
             {
                 file.Seek(0L, SeekOrigin.Begin);
                 file.Read(buffer, 0, buffer.Length);
-                if ((int)Shared.Swap(BitConverter.ToUInt32(buffer, 0)) == (int)Headers.imd5Magic)
+                if ((int)Shared.Swap(BitConverter.ToUInt32(buffer, 0)) == (int)imd5Magic)
                 {
-                    return Headers.HeaderType.IMD5;
+                    return HeaderType.IMD5;
                 }
             }
-            return Headers.HeaderType.None;
+            return HeaderType.None;
         }
         #endregion
 
@@ -279,7 +279,7 @@ namespace libWiiSharp
             /// <returns></returns>
             public static Headers.IMET Load(string pathToFile)
             {
-                return Headers.IMET.Load(File.ReadAllBytes(pathToFile));
+                return Load(File.ReadAllBytes(pathToFile));
             }
 
             /// <summary>
@@ -289,13 +289,13 @@ namespace libWiiSharp
             /// <returns></returns>
             public static Headers.IMET Load(byte[] fileOrHeader)
             {
-                Headers.HeaderType headerType = Headers.DetectHeader(fileOrHeader);
+                Headers.HeaderType headerType = DetectHeader(fileOrHeader);
                 switch (headerType)
                 {
-                    case Headers.HeaderType.ShortIMET:
-                    case Headers.HeaderType.IMET:
+                    case HeaderType.ShortIMET:
+                    case HeaderType.IMET:
                         Headers.IMET imet = new Headers.IMET();
-                        if (headerType == Headers.HeaderType.ShortIMET)
+                        if (headerType == HeaderType.ShortIMET)
                         {
                             imet.isShortImet = true;
                         }
@@ -324,13 +324,13 @@ namespace libWiiSharp
             /// <returns></returns>
             public static Headers.IMET Load(Stream fileOrHeader)
             {
-                Headers.HeaderType headerType = Headers.DetectHeader(fileOrHeader);
+                Headers.HeaderType headerType = DetectHeader(fileOrHeader);
                 switch (headerType)
                 {
-                    case Headers.HeaderType.ShortIMET:
-                    case Headers.HeaderType.IMET:
+                    case HeaderType.ShortIMET:
+                    case HeaderType.IMET:
                         Headers.IMET imet = new Headers.IMET();
-                        if (headerType == Headers.HeaderType.ShortIMET)
+                        if (headerType == HeaderType.ShortIMET)
                         {
                             imet.isShortImet = true;
                         }
@@ -384,7 +384,7 @@ namespace libWiiSharp
             /// <param name="pathToFile"></param>
             public static void RemoveHeader(string pathToFile)
             {
-                byte[] bytes = Headers.IMET.RemoveHeader(File.ReadAllBytes(pathToFile));
+                byte[] bytes = RemoveHeader(File.ReadAllBytes(pathToFile));
                 File.Delete(pathToFile);
                 File.WriteAllBytes(pathToFile, bytes);
             }
@@ -396,11 +396,11 @@ namespace libWiiSharp
             /// <returns></returns>
             public static byte[] RemoveHeader(byte[] file)
             {
-                Headers.HeaderType headerType = Headers.DetectHeader(file);
+                Headers.HeaderType headerType = DetectHeader(file);
                 switch (headerType)
                 {
-                    case Headers.HeaderType.ShortIMET:
-                    case Headers.HeaderType.IMET:
+                    case HeaderType.ShortIMET:
+                    case HeaderType.IMET:
                         byte[] numArray = new byte[(int)(file.Length - headerType)];
                         Array.Copy(file, (int)headerType, numArray, 0, numArray.Length);
                         return numArray;
@@ -683,7 +683,7 @@ namespace libWiiSharp
             /// <returns></returns>
             public static Headers.IMD5 Load(string pathToFile)
             {
-                return Headers.IMD5.Load(File.ReadAllBytes(pathToFile));
+                return Load(File.ReadAllBytes(pathToFile));
             }
 
             /// <summary>
@@ -693,7 +693,7 @@ namespace libWiiSharp
             /// <returns></returns>
             public static Headers.IMD5 Load(byte[] fileOrHeader)
             {
-                if (Headers.DetectHeader(fileOrHeader) != Headers.HeaderType.IMD5)
+                if (DetectHeader(fileOrHeader) != HeaderType.IMD5)
                 {
                     throw new Exception("No IMD5 Header found!");
                 }
@@ -720,7 +720,7 @@ namespace libWiiSharp
             /// <returns></returns>
             public static Headers.IMD5 Load(Stream fileOrHeader)
             {
-                if (Headers.DetectHeader(fileOrHeader) != Headers.HeaderType.IMD5)
+                if (DetectHeader(fileOrHeader) != HeaderType.IMD5)
                 {
                     throw new Exception("No IMD5 Header found!");
                 }
@@ -751,7 +751,7 @@ namespace libWiiSharp
             /// <param name="pathToFile"></param>
             public static void AddHeader(string pathToFile)
             {
-                byte[] buffer = Headers.IMD5.AddHeader(File.ReadAllBytes(pathToFile));
+                byte[] buffer = AddHeader(File.ReadAllBytes(pathToFile));
                 File.Delete(pathToFile);
                 using FileStream fileStream = new FileStream(pathToFile, FileMode.Create);
                 fileStream.Write(buffer, 0, buffer.Length);
@@ -764,7 +764,7 @@ namespace libWiiSharp
             /// <returns></returns>
             public static byte[] AddHeader(byte[] file)
             {
-                Headers.IMD5 imD5 = Headers.IMD5.Create(file);
+                Headers.IMD5 imD5 = Create(file);
                 MemoryStream memoryStream1 = new MemoryStream();
                 MemoryStream memoryStream2 = memoryStream1;
                 imD5.WriteToStream(memoryStream2);
@@ -780,7 +780,7 @@ namespace libWiiSharp
             /// <param name="pathToFile"></param>
             public static void RemoveHeader(string pathToFile)
             {
-                byte[] buffer = Headers.IMD5.RemoveHeader(File.ReadAllBytes(pathToFile));
+                byte[] buffer = RemoveHeader(File.ReadAllBytes(pathToFile));
                 File.Delete(pathToFile);
                 using FileStream fileStream = new FileStream(pathToFile, FileMode.Create);
                 fileStream.Write(buffer, 0, buffer.Length);

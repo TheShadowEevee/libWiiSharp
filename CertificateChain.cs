@@ -34,10 +34,12 @@ namespace libWiiSharp
         private byte[] certXs = new byte[768];
         private bool isDisposed;
 
+        /// <summary>
+        /// If false, the Certificate Chain is not complete (i.e. at least one certificate is missing).
+        /// </summary>
         public bool CertsComplete => certsComplete[0] && certsComplete[1] && certsComplete[2];
 
-        public event EventHandler<MessageEventArgs> Debug;
-
+        #region IDisposable Members
         ~CertificateChain() => Dispose(false);
 
         public void Dispose()
@@ -59,12 +61,24 @@ namespace libWiiSharp
             }
             isDisposed = true;
         }
+        #endregion
 
+        #region Public Functions
+        /// <summary>
+        /// Loads a cert file.
+        /// </summary>
+        /// <param name="pathToCert"></param>
+        /// <returns></returns>
         public static CertificateChain Load(string pathToCert)
         {
-            return CertificateChain.Load(File.ReadAllBytes(pathToCert));
+            return Load(File.ReadAllBytes(pathToCert));
         }
 
+        /// <summary>
+        /// Loads a cert file.
+        /// </summary>
+        /// <param name="certFile"></param>
+        /// <returns></returns>
         public static CertificateChain Load(byte[] certFile)
         {
             CertificateChain certificateChain = new CertificateChain();
@@ -82,6 +96,11 @@ namespace libWiiSharp
             return certificateChain;
         }
 
+        /// <summary>
+        /// Loads a cert file.
+        /// </summary>
+        /// <param name="cert"></param>
+        /// <returns></returns>
         public static CertificateChain Load(Stream cert)
         {
             CertificateChain certificateChain = new CertificateChain();
@@ -89,11 +108,25 @@ namespace libWiiSharp
             return certificateChain;
         }
 
+        /// <summary>
+        /// Grabs certificates from Ticket and Tmd.
+        /// Ticket and Tmd must contain certs! (They do when they're downloaded from NUS!)
+        /// </summary>
+        /// <param name="pathToTik"></param>
+        /// <param name="pathToTmd"></param>
+        /// <returns></returns>
         public static CertificateChain FromTikTmd(string pathToTik, string pathToTmd)
         {
-            return CertificateChain.FromTikTmd(File.ReadAllBytes(pathToTik), File.ReadAllBytes(pathToTmd));
+            return FromTikTmd(File.ReadAllBytes(pathToTik), File.ReadAllBytes(pathToTmd));
         }
 
+        /// <summary>
+        /// Grabs certificates from Ticket and Tmd.
+        /// Ticket and Tmd must contain certs! (They do when they're downloaded from NUS!)
+        /// </summary>
+        /// <param name="tikFile"></param>
+        /// <param name="tmdFile"></param>
+        /// <returns></returns>
         public static CertificateChain FromTikTmd(byte[] tikFile, byte[] tmdFile)
         {
             CertificateChain certificateChain = new CertificateChain();
@@ -121,6 +154,13 @@ namespace libWiiSharp
             return certificateChain.CertsComplete ? certificateChain : throw new Exception("Couldn't locate all certs!");
         }
 
+        /// <summary>
+        /// Grabs certificates from Ticket and Tmd.
+        /// Ticket and Tmd must contain certs! (They do when they're downloaded from NUS!)
+        /// </summary>
+        /// <param name="tik"></param>
+        /// <param name="tmd"></param>
+        /// <returns></returns>
         public static CertificateChain FromTikTmd(Stream tik, Stream tmd)
         {
             CertificateChain certificateChain = new CertificateChain();
@@ -129,11 +169,19 @@ namespace libWiiSharp
             return certificateChain;
         }
 
+        /// <summary>
+        /// Loads a cert file.
+        /// </summary>
+        /// <param name="pathToCert"></param>
         public void LoadFile(string pathToCert)
         {
             LoadFile(File.ReadAllBytes(pathToCert));
         }
 
+        /// <summary>
+        /// Loads a cert file.
+        /// </summary>
+        /// <param name="certFile"></param>
         public void LoadFile(byte[] certFile)
         {
             MemoryStream memoryStream = new MemoryStream(certFile);
@@ -149,16 +197,33 @@ namespace libWiiSharp
             memoryStream.Dispose();
         }
 
+        /// <summary>
+        /// Loads a cert file.
+        /// </summary>
+        /// <param name="cert"></param>
         public void LoadFile(Stream cert)
         {
             ParseCert(cert);
         }
 
+        /// <summary>
+        /// Grabs certificates from Ticket and Tmd.
+        /// Ticket and Tmd must contain certs! (They do when they're downloaded from NUS!)
+        /// </summary>
+        /// <param name="pathToTik"></param>
+        /// <param name="pathToTmd"></param>
+        /// <returns></returns>
         public void LoadFromTikTmd(string pathToTik, string pathToTmd)
         {
             LoadFromTikTmd(File.ReadAllBytes(pathToTik), File.ReadAllBytes(pathToTmd));
         }
 
+        /// <summary>
+        /// Grabs certificates from Ticket and Tmd.
+        /// Ticket and Tmd must contain certs! (They do when they're downloaded from NUS!)
+        /// </summary>
+        /// <param name="tikFile"></param>
+        /// <param name="tmdFile"></param>
         public void LoadFromTikTmd(byte[] tikFile, byte[] tmdFile)
         {
             MemoryStream memoryStream1 = new MemoryStream(tikFile);
@@ -188,12 +253,22 @@ namespace libWiiSharp
             }
         }
 
+        /// <summary>
+        /// Grabs certificates from Ticket and Tmd.
+        /// Ticket and Tmd must contain certs! (They do when they're downloaded from NUS!)
+        /// </summary>
+        /// <param name="tik"></param>
+        /// <param name="tmd"></param>
         public void LoadFromTikTmd(Stream tik, Stream tmd)
         {
             GrabFromTik(tik);
             GrabFromTmd(tmd);
         }
 
+        /// <summary>
+        /// Saves the Certificate Chain.
+        /// </summary>
+        /// <param name="savePath"></param>
         public void Save(string savePath)
         {
             if (File.Exists(savePath))
@@ -205,6 +280,10 @@ namespace libWiiSharp
             WriteToStream(fileStream);
         }
 
+        /// <summary>
+        /// Returns the Certificate Chain as a memory stream.
+        /// </summary>
+        /// <returns></returns>
         public MemoryStream ToMemoryStream()
         {
             MemoryStream memoryStream = new MemoryStream();
@@ -220,6 +299,10 @@ namespace libWiiSharp
             }
         }
 
+        /// <summary>
+        /// Returns the Certificate Chain as a byte array.
+        /// </summary>
+        /// <returns></returns>
         public byte[] ToByteArray()
         {
             MemoryStream memoryStream = new MemoryStream();
@@ -236,7 +319,9 @@ namespace libWiiSharp
             memoryStream.Dispose();
             return array;
         }
+        #endregion
 
+        #region Private Functions
         private void WriteToStream(Stream writeStream)
         {
             FireDebug("Writing Certificate Chain...");
@@ -476,6 +561,13 @@ namespace libWiiSharp
 
             return part[388] == 67 && part[389] == 80 && Shared.CompareByteArrays(sha.ComputeHash(part), Shared.HexStringToByteArray("6824D6DA4C25184F0D6DAF6EDB9C0FC57522A41C"));
         }
+        #endregion
+
+        #region Events
+        /// <summary>
+        /// Fires debugging messages. You may write them into a log file or log textbox.
+        /// </summary>
+        public event EventHandler<MessageEventArgs> Debug;
 
         private void FireDebug(string debugMessage, params object[] args)
         {
@@ -487,5 +579,6 @@ namespace libWiiSharp
 
             debug(new object(), new MessageEventArgs(string.Format(debugMessage, args)));
         }
+        #endregion
     }
 }

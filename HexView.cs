@@ -45,7 +45,7 @@ namespace libWiiSharp
             richTextBox.Clear();
             richTextBox.Font = new Font("Courier New", 9f);
             richTextBox.ReadOnly = true;
-            richTextBox.Text = HexView.DumpAsString(data);
+            richTextBox.Text = DumpAsString(data);
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace libWiiSharp
             textBox.Multiline = true;
             textBox.Font = new Font("Courier New", 9f);
             textBox.ReadOnly = true;
-            textBox.Text = HexView.DumpAsString(data).Replace("\n", "\r\n");
+            textBox.Text = DumpAsString(data).Replace("\n", "\r\n");
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace libWiiSharp
         /// <returns></returns>
         public static string DumpAsString(byte[] data)
         {
-            return string.Join("\n", HexView.DumpAsStringArray(data));
+            return string.Join("\n", DumpAsStringArray(data));
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace libWiiSharp
                 if (dataGridView.Columns[e.ColumnIndex].HeaderText.ToLower() == "dump")
                 {
                     string str = (string)dataGridView.Rows[e.RowIndex].Cells[17].Value;
-                    if (!(str != HexView.savedValue))
+                    if (!(str != savedValue))
                     {
                         return;
                     }
@@ -101,9 +101,9 @@ namespace libWiiSharp
 
                     for (int index = 0; index < 16; ++index)
                     {
-                        if (HexView.ToAscii(byte.Parse((string)dataGridView.Rows[e.RowIndex].Cells[index + 1].Value, NumberStyles.HexNumber)) != str[index])
+                        if (ToAscii(byte.Parse((string)dataGridView.Rows[e.RowIndex].Cells[index + 1].Value, NumberStyles.HexNumber)) != str[index])
                         {
-                            dataGridView.Rows[e.RowIndex].Cells[index + 1].Value = HexView.FromAscii(str[index]).ToString("x2");
+                            dataGridView.Rows[e.RowIndex].Cells[index + 1].Value = FromAscii(str[index]).ToString("x2");
                         }
                     }
                 }
@@ -115,7 +115,7 @@ namespace libWiiSharp
                     }
 
                     int startIndex = int.Parse(dataGridView.Columns[e.ColumnIndex].HeaderText, NumberStyles.HexNumber);
-                    string str = ((string)dataGridView.Rows[e.RowIndex].Cells[17].Value).Remove(startIndex, 1).Insert(startIndex, HexView.ToAscii(byte.Parse((string)dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value, NumberStyles.HexNumber)).ToString());
+                    string str = ((string)dataGridView.Rows[e.RowIndex].Cells[17].Value).Remove(startIndex, 1).Insert(startIndex, ToAscii(byte.Parse((string)dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value, NumberStyles.HexNumber)).ToString());
                     dataGridView.Rows[e.RowIndex].Cells[17].Value = str;
                     if (((string)dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value).Length <= 2)
                     {
@@ -140,7 +140,7 @@ namespace libWiiSharp
         /// <param name="e"></param>
         public static void DataGridView_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
-            HexView.savedValue = (string)((DataGridView)sender).Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+            savedValue = (string)((DataGridView)sender).Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
         }
         #endregion
 
@@ -165,7 +165,7 @@ namespace libWiiSharp
                 {
                     str1 = str1 + data[num + index].ToString("x2") + " ";
                     string str3 = str2;
-                    ascii = HexView.ToAscii(data[num + index]);
+                    ascii = ToAscii(data[num + index]);
                     string str4 = ascii.ToString();
                     str2 = str3 + str4;
                 }
@@ -182,7 +182,7 @@ namespace libWiiSharp
                     {
                         str1 = str1 + data[num + index].ToString("x2") + " ";
                         string str3 = str2;
-                        ascii = HexView.ToAscii(data[num + index]);
+                        ascii = ToAscii(data[num + index]);
                         string str4 = ascii.ToString();
                         str2 = str3 + str4;
                     }

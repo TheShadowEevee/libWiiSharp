@@ -153,7 +153,7 @@ namespace libWiiSharp
 
         public static TMD Load(string pathToTmd)
         {
-            return TMD.Load(File.ReadAllBytes(pathToTmd));
+            return Load(File.ReadAllBytes(pathToTmd));
         }
 
         public static TMD Load(byte[] tmdFile)
