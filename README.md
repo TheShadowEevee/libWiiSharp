@@ -11,7 +11,7 @@ If you want to contribute, you can do so at [the github repo](https://github.com
 
 
 
-##License
+## License
 
 libWiiSharp is released under the terms of the GNU General Public License v3.
 See the LICENSE file for more info
