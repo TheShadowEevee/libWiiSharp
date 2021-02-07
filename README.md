@@ -18,12 +18,12 @@ See the LICENSE file for more info
 
 ## Credits
 From the original libWiiSharp:
-	- Xuzz, SquidMan, megazig, Matt_P, Omega and The Lemon Man for Wii.py
-	- megazig for his bns conversion code (bns.py)
-	- SquidMan for Zetsubou
-	- Arikado and Lunatik for Dop-Mii
-	- Andre Perrot for gbalzss
+- Xuzz, SquidMan, megazig, Matt_P, Omega and The Lemon Man for Wii.py
+- megazig for his bns conversion code (bns.py)
+- SquidMan for Zetsubou
+- Arikado and Lunatik for Dop-Mii
+- Andre Perrot for gbalzss
 
 From this repo's libWiiSharp:
-	- Same as above
-	- Leathl as the original creator of libWiiSharp
+- Same as above
+- Leathl as the original creator of libWiiSharp
