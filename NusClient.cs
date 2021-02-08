@@ -25,6 +25,14 @@ using System.Security.Cryptography;
 
 namespace libWiiSharp
 {
+    public enum StoreType
+    {
+        EncryptedContent,
+        DecryptedContent,
+        WAD,
+        All,
+    }
+
     public class NusClient : IDisposable
     {
         private const string nusUrl = "http://nus.cdn.shop.wii.com/ccs/download/";
@@ -33,12 +41,18 @@ namespace libWiiSharp
         private bool continueWithoutTicket;
         private bool isDisposed;
 
+        /// <summary>
+        /// If true, existing local files will be used.
+        /// </summary>
         public bool UseLocalFiles
         {
             get => useLocalFiles;
             set => useLocalFiles = value;
         }
 
+        /// <summary>
+        /// If true, the download will be continued even if no ticket for the title is avaiable (WAD packaging and decryption are disabled).
+        /// </summary>
         public bool ContinueWithoutTicket
         {
             get => continueWithoutTicket;
@@ -165,11 +179,19 @@ namespace libWiiSharp
                 FireDebug("   Content ID {0} wasn't found in TMD...", (object)contentId);
                 throw new Exception("Content ID wasn't found in the TMD!");
             }
-            if (!File.Exists("cetk"))
+            if (!File.Exists("cetk") && !continueWithoutTicket)
             {
                 FireDebug("   Downloading Ticket...");
-                //byte[] tikArray = wcNus.DownloadData(str2 + "cetk");
                 Console.WriteLine("Downloading");
+                try
+                {
+                    byte[] tikArray = wcNus.DownloadData(str2 + "cetk");
+                }
+                catch(Exception ex)
+                {
+                    FireDebug("   Downloading Ticket Failed...");
+                    throw new Exception("CETK Doesn't Exist and Downloading Ticket Failed:\n" + ex.Message);
+                }
             }
             Console.WriteLine("Continuing");
             FireDebug("Parsing Ticket...");
@@ -257,6 +279,12 @@ namespace libWiiSharp
                         break;
                 }
             }
+            if (ContinueWithoutTicket == true)
+            {
+                flag2 = false;
+                flag1 = true;
+                flag3 = false;
+            }
             FireDebug("   Checking for Internet connection...");
             if (!CheckInet())
             {
@@ -317,7 +345,8 @@ namespace libWiiSharp
 
             FireDebug("    -> {0} Contents", (object)tmd.NumOfContents);
             FireDebug("   Parsing Ticket...");
-            Ticket tik = Ticket.Load(outputDir + "cetk");
+            Ticket tik = null;
+            if (!continueWithoutTicket) { tik = Ticket.Load(outputDir + "cetk"); }
             string[] strArray1 = new string[tmd.NumOfContents];
             uint contentId;
             for (int index1 = 0; index1 < tmd.NumOfContents; ++index1)
@@ -427,7 +456,10 @@ namespace libWiiSharp
             {
                 FireDebug("   Deleting TMD and Ticket...");
                 File.Delete(outputDir + str2);
-                File.Delete(outputDir + "cetk");
+                if (ContinueWithoutTicket == false) 
+                {
+                    File.Delete(outputDir + "cetk");
+                }
             }
             FireDebug("Downloading Title {0} v{1} Finished...", titleId, string.IsNullOrEmpty(titleVersion) ? "[Latest]" : titleVersion);
             FireProgress(100);

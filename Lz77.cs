@@ -27,26 +27,45 @@ namespace libWiiSharp
         //private const int F = 18;
         //private const int threshold = 2;
         private static readonly uint lz77Magic = 1280980791;
-        //private readonly int[] leftSon = new int[4097];
-        //private readonly int[] rightSon = new int[4353];
-        //private readonly int[] dad = new int[4097];
+        private readonly int[] leftSon = new int[4097];
+        private readonly int[] rightSon = new int[4353];
+        private readonly int[] dad = new int[4097];
         private readonly ushort[] textBuffer = new ushort[4113];
-        //private int matchPosition;
-        //private int matchLength;
+        private int matchPosition;
+        private int matchLength;
 
+        /// <summary>
+        /// Lz77 Magic.
+        /// </summary>
         public static uint Lz77Magic => lz77Magic;
 
+        #region Public Functions
+        /// <summary>
+        /// Checks whether a file is Lz77 compressed or not.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
         public static bool IsLz77Compressed(string file)
         {
             return IsLz77Compressed(File.ReadAllBytes(file));
         }
 
+        /// <summary>
+        /// Checks whether a file is Lz77 compressed or not.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
         public static bool IsLz77Compressed(byte[] file)
         {
             Headers.HeaderType headerType = Headers.DetectHeader(file);
             return (int)Shared.Swap(BitConverter.ToUInt32(file, (int)headerType)) == (int)lz77Magic;
         }
 
+        /// <summary>
+        /// Checks whether a file is Lz77 compressed or not.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
         public static bool IsLz77Compressed(Stream file)
         {
             Headers.HeaderType headerType = Headers.DetectHeader(file);
@@ -56,12 +75,17 @@ namespace libWiiSharp
             return (int)Shared.Swap(BitConverter.ToUInt32(buffer, 0)) == (int)lz77Magic;
         }
 
+        /// <summary>
+        /// Compresses a file using the Lz77 algorithm.
+        /// </summary>
+        /// <param name="inFile"></param>
+        /// <param name="outFile"></param>
         public void Compress(string inFile, string outFile)
         {
             Stream stream = null;
             using (FileStream fileStream = new FileStream(inFile, FileMode.Open))
             {
-                stream = Compress(fileStream);
+                stream = PrivCompress(fileStream);
             }
 
             byte[] buffer = new byte[stream.Length];
@@ -77,22 +101,37 @@ namespace libWiiSharp
             }
         }
 
+        /// <summary>
+        /// Compresses the byte array using the Lz77 algorithm.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
         public byte[] Compress(byte[] file)
         {
-            return ((MemoryStream)Compress(new MemoryStream(file))).ToArray();
+            return ((MemoryStream)PrivCompress(new MemoryStream(file))).ToArray();
         }
 
+        /// <summary>
+        /// Compresses the stream using the Lz77 algorithm.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
         public Stream Compress(Stream file)
         {
-            return Compress(file);
+            return PrivCompress(file);
         }
 
+        /// <summary>
+        /// Decompresses a file using the Lz77 algorithm.
+        /// </summary>
+        /// <param name="inFile"></param>
+        /// <param name="outFile"></param>
         public void Decompress(string inFile, string outFile)
         {
             Stream stream = null;
             using (FileStream fileStream = new FileStream(inFile, FileMode.Open))
             {
-                stream = Decompress(fileStream);
+                stream = PrivDecompress(fileStream);
             }
 
             byte[] buffer = new byte[stream.Length];
@@ -108,6 +147,11 @@ namespace libWiiSharp
             }
         }
 
+        /// <summary>
+        /// Decompresses the byte array using the Lz77 algorithm.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
         public byte[] Decompress(byte[] file)
         {
             return ((MemoryStream)PrivDecompress(new MemoryStream(file))).ToArray();
@@ -117,7 +161,9 @@ namespace libWiiSharp
         {
             return PrivDecompress(file);
         }
+        #endregion
 
+        #region Private Functions
         private Stream PrivDecompress(Stream inFile)
         {
             if (!IsLz77Compressed(inFile))
@@ -224,7 +270,7 @@ namespace libWiiSharp
         label_24:
             return memoryStream;
         }
-        /*
+
         private Stream PrivCompress(Stream inFile)
         {
             if (Lz77.IsLz77Compressed(inFile))
@@ -415,6 +461,6 @@ namespace libWiiSharp
                 this.leftSon[this.dad[p]] = index;
             this.dad[p] = 4096;
         }
-        */
+        #endregion
     }
 }
