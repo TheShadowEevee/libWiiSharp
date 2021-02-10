@@ -38,7 +38,7 @@ namespace libWiiSharp
         public void LoadIOS(ref WAD iosWad)
         {
             wadFile = iosWad;
-            GetEsIndex();
+            PrivGetEsIndex();
         }
 
         /// <summary>
@@ -88,12 +88,12 @@ namespace libWiiSharp
 
         public int PatchFakeSigning(ref byte[] esModule)
         {
-            return PatchFakeSigning(ref esModule);
+            return PrivPatchFakeSigning(ref esModule);
         }
 
         public int PatchEsIdentify(ref byte[] esModule)
         {
-            return PatchEsIdentify(ref esModule);
+            return PrivPatchEsIdentify(ref esModule);
         }
 
         public int PatchNandPermissions(ref byte[] esModule)
@@ -305,7 +305,7 @@ namespace libWiiSharp
             return num;
         }
 
-        private void GetEsIndex()
+        private void PrivGetEsIndex()
         {
             FireDebug("Scanning for ES Module...");
             string str = "$IOSVersion:";

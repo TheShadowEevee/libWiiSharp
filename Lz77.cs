@@ -273,14 +273,14 @@ namespace libWiiSharp
 
         private Stream PrivCompress(Stream inFile)
         {
-            if (Lz77.IsLz77Compressed(inFile))
+            if (IsLz77Compressed(inFile))
                 return inFile;
             inFile.Seek(0L, SeekOrigin.Begin);
             int num1 = 0;
             int[] numArray1 = new int[17];
             uint num2 = (uint)(((int)Convert.ToUInt32(inFile.Length) << 8) + 16);
             MemoryStream memoryStream = new MemoryStream();
-            memoryStream.Write(BitConverter.GetBytes(Shared.Swap(Lz77.lz77Magic)), 0, 4);
+            memoryStream.Write(BitConverter.GetBytes(Shared.Swap(lz77Magic)), 0, 4);
             memoryStream.Write(BitConverter.GetBytes(num2), 0, 4);
             this.InitTree();
             numArray1[0] = 0;
@@ -306,7 +306,7 @@ namespace libWiiSharp
                 if (this.matchLength <= 2)
                 {
                     this.matchLength = 1;
-                    numArray1[num3++] = (int)this.textBuffer[r];
+                    numArray1[num3++] = this.textBuffer[r];
                 }
                 else
                 {
@@ -314,12 +314,12 @@ namespace libWiiSharp
                     int[] numArray2 = numArray1;
                     int index1 = num3;
                     int num7 = index1 + 1;
-                    int num8 = (int)(ushort)(r - this.matchPosition - 1 >> 8 & 15) | this.matchLength - 3 << 4;
+                    int num8 = (ushort)(r - this.matchPosition - 1 >> 8 & 15) | this.matchLength - 3 << 4;
                     numArray2[index1] = num8;
                     int[] numArray3 = numArray1;
                     int index2 = num7;
                     num3 = index2 + 1;
-                    int num9 = (int)(ushort)(r - this.matchPosition - 1 & (int)byte.MaxValue);
+                    int num9 = (ushort)(r - this.matchPosition - 1 & byte.MaxValue);
                     numArray3[index2] = num9;
                 }
                 if ((num4 >>= 1) == 0)
@@ -363,9 +363,9 @@ namespace libWiiSharp
             if (num1 % 4 != 0)
             {
                 for (int index = 0; index < 4 - num1 % 4; ++index)
-                    memoryStream.WriteByte((byte)0);
+                    memoryStream.WriteByte(0);
             }
-            return (Stream)memoryStream;
+            return memoryStream;
         }
 
         private void InitTree()
@@ -378,7 +378,7 @@ namespace libWiiSharp
         private void InsertNode(int r)
         {
             int num1 = 1;
-            int index = 4097 + (this.textBuffer[r] != ushort.MaxValue ? (int)this.textBuffer[r] : 0);
+            int index = 4097 + (this.textBuffer[r] != ushort.MaxValue ? this.textBuffer[r] : 0);
             this.rightSon[r] = this.leftSon[r] = 4096;
             this.matchLength = 0;
             int num2;
@@ -407,7 +407,7 @@ namespace libWiiSharp
                         index = this.leftSon[index];
                     }
                     num2 = 1;
-                    while (num2 < 18 && (num1 = (int)this.textBuffer[r + num2] - (int)this.textBuffer[index + num2]) == 0)
+                    while (num2 < 18 && (num1 = this.textBuffer[r + num2] - this.textBuffer[index + num2]) == 0)
                         ++num2;
                 }
                 while (num2 <= this.matchLength);

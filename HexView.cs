@@ -71,7 +71,7 @@ namespace libWiiSharp
         /// <returns></returns>
         public static string DumpAsString(byte[] data)
         {
-            return string.Join("\n", DumpAsStringArray(data));
+            return string.Join("\n", PrivDumpAsStringArray(data));
         }
 
         /// <summary>
@@ -101,9 +101,9 @@ namespace libWiiSharp
 
                     for (int index = 0; index < 16; ++index)
                     {
-                        if (ToAscii(byte.Parse((string)dataGridView.Rows[e.RowIndex].Cells[index + 1].Value, NumberStyles.HexNumber)) != str[index])
+                        if (PrivToAscii(byte.Parse((string)dataGridView.Rows[e.RowIndex].Cells[index + 1].Value, NumberStyles.HexNumber)) != str[index])
                         {
-                            dataGridView.Rows[e.RowIndex].Cells[index + 1].Value = FromAscii(str[index]).ToString("x2");
+                            dataGridView.Rows[e.RowIndex].Cells[index + 1].Value = PrivFromAscii(str[index]).ToString("x2");
                         }
                     }
                 }
@@ -115,7 +115,7 @@ namespace libWiiSharp
                     }
 
                     int startIndex = int.Parse(dataGridView.Columns[e.ColumnIndex].HeaderText, NumberStyles.HexNumber);
-                    string str = ((string)dataGridView.Rows[e.RowIndex].Cells[17].Value).Remove(startIndex, 1).Insert(startIndex, ToAscii(byte.Parse((string)dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value, NumberStyles.HexNumber)).ToString());
+                    string str = ((string)dataGridView.Rows[e.RowIndex].Cells[17].Value).Remove(startIndex, 1).Insert(startIndex, PrivToAscii(byte.Parse((string)dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value, NumberStyles.HexNumber)).ToString());
                     dataGridView.Rows[e.RowIndex].Cells[17].Value = str;
                     if (((string)dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value).Length <= 2)
                     {
@@ -152,7 +152,7 @@ namespace libWiiSharp
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        private static string[] DumpAsStringArray(byte[] data)
+        private static string[] PrivDumpAsStringArray(byte[] data)
         {
             List<string> stringList = new List<string>();
             int num;
@@ -165,7 +165,7 @@ namespace libWiiSharp
                 {
                     str1 = str1 + data[num + index].ToString("x2") + " ";
                     string str3 = str2;
-                    ascii = ToAscii(data[num + index]);
+                    ascii = PrivToAscii(data[num + index]);
                     string str4 = ascii.ToString();
                     str2 = str3 + str4;
                 }
@@ -182,7 +182,7 @@ namespace libWiiSharp
                     {
                         str1 = str1 + data[num + index].ToString("x2") + " ";
                         string str3 = str2;
-                        ascii = ToAscii(data[num + index]);
+                        ascii = PrivToAscii(data[num + index]);
                         string str4 = ascii.ToString();
                         str2 = str3 + str4;
                     }
@@ -196,8 +196,7 @@ namespace libWiiSharp
             }
             return stringList.ToArray();
         }
-        // Unused
-        /*
+
         /// <summary>
         /// Dumps a DataGridView back to a byte array.
         /// The DataGridView must have the right format.
@@ -205,7 +204,7 @@ namespace libWiiSharp
         /// </summary>
         /// <param name="dataGridView"></param>
         /// <returns></returns>
-        private static byte[] DumpFromDataGridView(DataGridView dataGridView)
+        private static byte[] PrivDumpFromDataGridView(DataGridView dataGridView)
         {
             try
             {
@@ -235,7 +234,7 @@ namespace libWiiSharp
         /// </summary>
         /// <param name="data"></param>
         /// <param name="dataGridView"></param>
-        private static void DumpToDataGridView(byte[] data, DataGridView dataGridView)
+        private static void PrivDumpToDataGridView(byte[] data, DataGridView dataGridView)
         {
             dataGridView.Columns.Clear();
             dataGridView.Rows.Clear();
@@ -244,59 +243,59 @@ namespace libWiiSharp
             {
                 HeaderText = "Offset",
                 Width = 80,
-                CellTemplate = (DataGridViewCell)new DataGridViewTextBoxCell()
+                CellTemplate = new DataGridViewTextBoxCell()
             });
             for (int index = 0; index < 16; ++index)
                 dataGridView.Columns.Add(new DataGridViewColumn()
                 {
                     HeaderText = index.ToString("x1"),
                     Width = 30,
-                    CellTemplate = (DataGridViewCell)new DataGridViewTextBoxCell()
+                    CellTemplate = new DataGridViewTextBoxCell()
                 });
             dataGridView.Columns.Add(new DataGridViewColumn()
             {
                 HeaderText = "Dump",
                 Width = 125,
-                CellTemplate = (DataGridViewCell)new DataGridViewTextBoxCell()
+                CellTemplate = new DataGridViewTextBoxCell()
             });
             int num;
-            for (num = 0; (double)(data.Length - num) / 16.0 >= 1.0; num += 16)
+            for (num = 0; (data.Length - num) / 16.0 >= 1.0; num += 16)
             {
                 DataGridViewRow dataGridViewRow = new DataGridViewRow();
-                int index1 = dataGridViewRow.Cells.Add((DataGridViewCell)new DataGridViewTextBoxCell());
-                dataGridViewRow.Cells[index1].Value = (object)num.ToString("x8");
+                int index1 = dataGridViewRow.Cells.Add(new DataGridViewTextBoxCell());
+                dataGridViewRow.Cells[index1].Value = num.ToString("x8");
                 dataGridViewRow.Cells[index1].ReadOnly = true;
                 string empty = string.Empty;
                 for (int index2 = 0; index2 < 16; ++index2)
                 {
-                    int index3 = dataGridViewRow.Cells.Add((DataGridViewCell)new DataGridViewTextBoxCell());
-                    dataGridViewRow.Cells[index3].Value = (object)data[num + index2].ToString("x2");
-                    empty += HexView.ToAscii(data[num + index2]).ToString();
+                    int index3 = dataGridViewRow.Cells.Add(new DataGridViewTextBoxCell());
+                    dataGridViewRow.Cells[index3].Value = data[num + index2].ToString("x2");
+                    empty += PrivToAscii(data[num + index2]).ToString();
                 }
-                int index4 = dataGridViewRow.Cells.Add((DataGridViewCell)new DataGridViewTextBoxCell());
-                dataGridViewRow.Cells[index4].Value = (object)empty;
+                int index4 = dataGridViewRow.Cells.Add(new DataGridViewTextBoxCell());
+                dataGridViewRow.Cells[index4].Value = empty;
                 dataGridView.Rows.Add(dataGridViewRow);
             }
             if (data.Length <= num)
                 return;
             DataGridViewRow dataGridViewRow1 = new DataGridViewRow();
-            int index5 = dataGridViewRow1.Cells.Add((DataGridViewCell)new DataGridViewTextBoxCell());
-            dataGridViewRow1.Cells[index5].Value = (object)num.ToString("x8");
+            int index5 = dataGridViewRow1.Cells.Add(new DataGridViewTextBoxCell());
+            dataGridViewRow1.Cells[index5].Value = num.ToString("x8");
             dataGridViewRow1.Cells[index5].ReadOnly = true;
             string empty1 = string.Empty;
             for (int index1 = 0; index1 < 16; ++index1)
             {
                 if (index1 < data.Length - num)
                 {
-                    int index2 = dataGridViewRow1.Cells.Add((DataGridViewCell)new DataGridViewTextBoxCell());
-                    dataGridViewRow1.Cells[index2].Value = (object)data[num + index1].ToString("x2");
-                    empty1 += HexView.ToAscii(data[num + index1]).ToString();
+                    int index2 = dataGridViewRow1.Cells.Add(new DataGridViewTextBoxCell());
+                    dataGridViewRow1.Cells[index2].Value = data[num + index1].ToString("x2");
+                    empty1 += PrivToAscii(data[num + index1]).ToString();
                 }
                 else
-                    dataGridViewRow1.Cells.Add((DataGridViewCell)new DataGridViewTextBoxCell());
+                    dataGridViewRow1.Cells.Add(new DataGridViewTextBoxCell());
             }
-            int index6 = dataGridViewRow1.Cells.Add((DataGridViewCell)new DataGridViewTextBoxCell());
-            dataGridViewRow1.Cells[index6].Value = (object)empty1;
+            int index6 = dataGridViewRow1.Cells.Add(new DataGridViewTextBoxCell());
+            dataGridViewRow1.Cells[index6].Value = empty1;
             dataGridView.Rows.Add(dataGridViewRow1);
         }
 
@@ -307,7 +306,7 @@ namespace libWiiSharp
         /// </summary>
         /// <param name="data"></param>
         /// <param name="listView"></param>
-        private static void DumpToListView(byte[] data, ListView listView)
+        private static void PrivDumpToListView(byte[] data, ListView listView)
         {
             listView.Columns.Clear();
             listView.Items.Clear();
@@ -318,14 +317,14 @@ namespace libWiiSharp
                 listView.Columns.Add(index.ToString("x1"), index.ToString("x1"), 30, HorizontalAlignment.Left, string.Empty);
             listView.Columns.Add("Dump", "Dump", 125, HorizontalAlignment.Left, string.Empty);
             int num;
-            for (num = 0; (double)(data.Length - num) / 16.0 >= 1.0; num += 16)
+            for (num = 0; (data.Length - num) / 16.0 >= 1.0; num += 16)
             {
                 ListViewItem listViewItem = new ListViewItem(num.ToString("x8"));
                 string empty = string.Empty;
                 for (int index = 0; index < 16; ++index)
                 {
                     listViewItem.SubItems.Add(data[num + index].ToString("x2"));
-                    empty += HexView.ToAscii(data[num + index]).ToString();
+                    empty += PrivToAscii(data[num + index]).ToString();
                 }
                 listViewItem.SubItems.Add(empty);
                 listView.Items.Add(listViewItem);
@@ -339,7 +338,7 @@ namespace libWiiSharp
                 if (index < data.Length - num)
                 {
                     listViewItem1.SubItems.Add(data[num + index].ToString("x2"));
-                    empty1 += HexView.ToAscii(data[num + index]).ToString();
+                    empty1 += PrivToAscii(data[num + index]).ToString();
                 }
                 else
                     listViewItem1.SubItems.Add(string.Empty);
@@ -347,15 +346,14 @@ namespace libWiiSharp
             listViewItem1.SubItems.Add(empty1);
             listView.Items.Add(listViewItem1);
         }
-        */
 
 
-        private static char ToAscii(byte value)
+        private static char PrivToAscii(byte value)
         {
             return value >= 32 && value <= 126 ? (char)value : '.';
         }
 
-        private static byte FromAscii(char value)
+        private static byte PrivFromAscii(char value)
         {
             return (byte)value;
         }

@@ -97,7 +97,7 @@ namespace libWiiSharp
 
         public TMD DownloadTMD(string titleId, string titleVersion)
         {
-            return titleId.Length == 16 ? DownloadTmd(titleId, titleVersion) : throw new Exception("Title ID must be 16 characters long!");
+            return titleId.Length == 16 ? PrivDownloadTmd(titleId, titleVersion) : throw new Exception("Title ID must be 16 characters long!");
         }
 
         public Ticket DownloadTicket(string titleId)
@@ -146,7 +146,7 @@ namespace libWiiSharp
             contentId = num.ToString("x8");
             FireDebug("Downloading Content (Content ID: {0}) of Title {1} v{2}...", contentId, titleId, string.IsNullOrEmpty(titleVersion) ? "[Latest]" : titleVersion);
             FireDebug("   Checking for Internet connection...");
-            if (!CheckInet())
+            if (!PrivCheckInet())
             {
                 FireDebug("   Connection not found...");
                 throw new Exception("You're not connected to the internet!");
@@ -201,7 +201,7 @@ namespace libWiiSharp
             byte[] content = wcNus.DownloadData(str2 + empty);
             FireProgress(80);
             FireDebug("   Decrypting Content...");
-            byte[] array = DecryptContent(content, contentIndex, tik, tmd);
+            byte[] array = PrivDecryptContent(content, contentIndex, tik, tmd);
             Array.Resize<byte>(ref array, (int)tmd.Contents[contentIndex].Size);
             if (!Shared.CompareByteArrays(SHA1.Create().ComputeHash(array), tmd.Contents[contentIndex].Hash))
             {
@@ -215,7 +215,7 @@ namespace libWiiSharp
 
         private Ticket PrivDownloadTicket(string titleId)
         {
-            if (!CheckInet())
+            if (!PrivCheckInet())
             {
                 throw new Exception("You're not connected to the internet!");
             }
@@ -226,9 +226,9 @@ namespace libWiiSharp
             return Ticket.Load(tikArray);
         }
 
-        private TMD DownloadTmd(string titleId, string titleVersion)
+        private TMD PrivDownloadTmd(string titleId, string titleVersion)
         {
-            if (!CheckInet())
+            if (!PrivCheckInet())
             {
                 throw new Exception("You're not connected to the internet!");
             }
@@ -286,7 +286,7 @@ namespace libWiiSharp
                 flag3 = false;
             }
             FireDebug("   Checking for Internet connection...");
-            if (!CheckInet())
+            if (!PrivCheckInet())
             {
                 FireDebug("   Connection not found...");
                 throw new Exception("You're not connected to the internet!");
@@ -398,7 +398,7 @@ namespace libWiiSharp
                     string str3 = outputDir;
                     contentId = tmd.Contents[contentIndex].ContentID;
                     string str4 = contentId.ToString("x8");
-                    byte[] array = DecryptContent(File.ReadAllBytes(str3 + str4), contentIndex, tik, tmd);
+                    byte[] array = PrivDecryptContent(File.ReadAllBytes(str3 + str4), contentIndex, tik, tmd);
                     Array.Resize<byte>(ref array, (int)tmd.Contents[contentIndex].Size);
                     if (!Shared.CompareByteArrays(shA1.ComputeHash(array), tmd.Contents[contentIndex].Hash))
                     {
@@ -465,7 +465,7 @@ namespace libWiiSharp
             FireProgress(100);
         }
 
-        private byte[] DecryptContent(byte[] content, int contentIndex, Ticket tik, TMD tmd)
+        private byte[] PrivDecryptContent(byte[] content, int contentIndex, Ticket tik, TMD tmd)
         {
             Array.Resize<byte>(ref content, Shared.AddPadding(content.Length, 16));
             byte[] titleKey = tik.TitleKey;
@@ -492,7 +492,7 @@ namespace libWiiSharp
             return buffer;
         }
 
-        private bool CheckInet()
+        private bool PrivCheckInet()
         {
             try
             {

@@ -702,7 +702,7 @@ namespace libWiiSharp
                 MemoryStream memoryStream = new MemoryStream(fileOrHeader);
                 try
                 {
-                    imD5.ParseHeader(memoryStream);
+                    imD5.PrivParseHeader(memoryStream);
                 }
                 catch
                 {
@@ -726,7 +726,7 @@ namespace libWiiSharp
                 }
 
                 Headers.IMD5 imD5 = new Headers.IMD5();
-                imD5.ParseHeader(fileOrHeader);
+                imD5.PrivParseHeader(fileOrHeader);
                 return imD5;
             }
 
@@ -741,7 +741,7 @@ namespace libWiiSharp
                 {
                     fileSize = (uint)file.Length
                 };
-                imD5.ComputeHash(file);
+                imD5.PrivComputeHash(file);
                 return imD5;
             }
 
@@ -767,7 +767,7 @@ namespace libWiiSharp
                 Headers.IMD5 imD5 = Create(file);
                 MemoryStream memoryStream1 = new MemoryStream();
                 MemoryStream memoryStream2 = memoryStream1;
-                imD5.WriteToStream(memoryStream2);
+                imD5.PrivWriteToStream(memoryStream2);
                 memoryStream1.Write(file, 0, file.Length);
                 byte[] array = memoryStream1.ToArray();
                 memoryStream1.Dispose();
@@ -809,7 +809,7 @@ namespace libWiiSharp
                 MemoryStream memoryStream = new MemoryStream();
                 try
                 {
-                    WriteToStream(memoryStream);
+                    PrivWriteToStream(memoryStream);
                     return memoryStream;
                 }
                 catch
@@ -834,12 +834,12 @@ namespace libWiiSharp
             /// <param name="writeStream"></param>
             public void Write(Stream writeStream)
             {
-                WriteToStream(writeStream);
+                PrivWriteToStream(writeStream);
             }
             #endregion
 
             #region Private Functions
-            private void WriteToStream(Stream writeStream)
+            private void PrivWriteToStream(Stream writeStream)
             {
                 writeStream.Seek(0L, SeekOrigin.Begin);
                 writeStream.Write(BitConverter.GetBytes(Shared.Swap(imd5Magic)), 0, 4);
@@ -848,14 +848,14 @@ namespace libWiiSharp
                 writeStream.Write(hash, 0, hash.Length);
             }
 
-            private void ComputeHash(byte[] bytesToHash)
+            private void PrivComputeHash(byte[] bytesToHash)
             {
                 MD5 md5 = MD5.Create();
                 hash = md5.ComputeHash(bytesToHash);
                 md5.Clear();
             }
 
-            private void ParseHeader(Stream headerStream)
+            private void PrivParseHeader(Stream headerStream)
             {
                 headerStream.Seek(0L, SeekOrigin.Begin);
                 byte[] buffer = new byte[4];

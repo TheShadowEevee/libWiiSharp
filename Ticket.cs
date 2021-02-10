@@ -100,7 +100,7 @@ namespace libWiiSharp
                     return;
                 }
 
-                ReDecryptTitleKey();
+                PrivReDecryptTitleKey();
             }
         }
 
@@ -157,7 +157,7 @@ namespace libWiiSharp
             MemoryStream memoryStream = new MemoryStream(ticket);
             try
             {
-                ticket1.ParseTicket(memoryStream);
+                ticket1.PrivParseTicket(memoryStream);
             }
             catch
             {
@@ -171,7 +171,7 @@ namespace libWiiSharp
         public static Ticket Load(Stream ticket)
         {
             Ticket ticket1 = new Ticket();
-            ticket1.ParseTicket(ticket);
+            ticket1.PrivParseTicket(ticket);
             return ticket1;
         }
 
@@ -185,7 +185,7 @@ namespace libWiiSharp
             MemoryStream memoryStream = new MemoryStream(ticket);
             try
             {
-                ParseTicket(memoryStream);
+                PrivParseTicket(memoryStream);
             }
             catch
             {
@@ -197,7 +197,7 @@ namespace libWiiSharp
 
         public void LoadFile(Stream ticket)
         {
-            ParseTicket(ticket);
+            PrivParseTicket(ticket);
         }
 
         public void Save(string savePath)
@@ -218,7 +218,7 @@ namespace libWiiSharp
             }
 
             using FileStream fileStream = new FileStream(savePath, FileMode.Create);
-            WriteToStream(fileStream);
+            PrivWriteToStream(fileStream);
         }
 
         public MemoryStream ToMemoryStream()
@@ -236,7 +236,7 @@ namespace libWiiSharp
             MemoryStream memoryStream = new MemoryStream();
             try
             {
-                WriteToStream(memoryStream);
+                PrivWriteToStream(memoryStream);
                 return memoryStream;
             }
             catch
@@ -261,7 +261,7 @@ namespace libWiiSharp
             MemoryStream memoryStream = new MemoryStream();
             try
             {
-                WriteToStream(memoryStream);
+                PrivWriteToStream(memoryStream);
             }
             catch
             {
@@ -290,7 +290,7 @@ namespace libWiiSharp
                 encryptedTitleKey[index] = (byte)newTitleKey[index];
             }
 
-            DecryptTitleKey();
+            PrivDecryptTitleKey();
             titleKeyChanged = true;
             reDecrypt = true;
             newEncryptedTitleKey = encryptedTitleKey;
@@ -299,7 +299,7 @@ namespace libWiiSharp
         public void SetTitleKey(byte[] newTitleKey)
         {
             encryptedTitleKey = newTitleKey.Length == 16 ? newTitleKey : throw new Exception("The title key must be 16 characters long!");
-            DecryptTitleKey();
+            PrivDecryptTitleKey();
             titleKeyChanged = true;
             reDecrypt = true;
             newEncryptedTitleKey = newTitleKey;
@@ -317,11 +317,11 @@ namespace libWiiSharp
             });
         }
 
-        private void WriteToStream(Stream writeStream)
+        private void PrivWriteToStream(Stream writeStream)
         {
             FireDebug("Writing Ticket...");
             FireDebug("   Encrypting Title Key...");
-            EncryptTitleKey();
+            PrivEncryptTitleKey();
             FireDebug("    -> Decrypted Title Key: {0}", (object)Shared.ByteArrayToString(decryptedTitleKey));
             FireDebug("    -> Encrypted Title Key: {0}", (object)Shared.ByteArrayToString(encryptedTitleKey));
             if (fakeSign)
@@ -421,7 +421,7 @@ namespace libWiiSharp
             FireDebug("Writing Ticket Finished...");
         }
 
-        private void ParseTicket(Stream ticketFile)
+        private void PrivParseTicket(Stream ticketFile)
         {
             FireDebug("Parsing Ticket...");
             ticketFile.Seek(0L, SeekOrigin.Begin);
@@ -478,13 +478,13 @@ namespace libWiiSharp
             FireDebug("   Reading Padding4... (Offset: 0x{0})", (object)ticketFile.Position.ToString("x8").ToUpper());
             ticketFile.Read(padding4, 0, padding4.Length);
             FireDebug("   Decrypting Title Key...");
-            DecryptTitleKey();
+            PrivDecryptTitleKey();
             FireDebug("    -> Encrypted Title Key: {0}", (object)Shared.ByteArrayToString(encryptedTitleKey));
             FireDebug("    -> Decrypted Title Key: {0}", (object)Shared.ByteArrayToString(decryptedTitleKey));
             FireDebug("Parsing Ticket Finished...");
         }
 
-        private void DecryptTitleKey()
+        private void PrivDecryptTitleKey()
         {
             byte[] numArray = commonKeyIndex == 1 ? CommonKey.GetKoreanKey() : CommonKey.GetStandardKey();
             byte[] bytes = BitConverter.GetBytes(Shared.Swap(titleId));
@@ -508,7 +508,7 @@ namespace libWiiSharp
             rijndaelManaged.Clear();
         }
 
-        private void EncryptTitleKey()
+        private void PrivEncryptTitleKey()
         {
             commonKeyIndex = newKeyIndex;
             byte[] numArray = commonKeyIndex == 1 ? CommonKey.GetKoreanKey() : CommonKey.GetStandardKey();
@@ -533,10 +533,10 @@ namespace libWiiSharp
             rijndaelManaged.Clear();
         }
 
-        private void ReDecryptTitleKey()
+        private void PrivReDecryptTitleKey()
         {
             encryptedTitleKey = newEncryptedTitleKey;
-            DecryptTitleKey();
+            PrivDecryptTitleKey();
         }
 
         private void FireDebug(string debugMessage, params object[] args)
