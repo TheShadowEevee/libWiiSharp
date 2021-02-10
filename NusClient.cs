@@ -313,6 +313,7 @@ namespace libWiiSharp
                 throw new Exception("Downloading TMD Failed:\n" + ex.Message);
             }
 
+            
             if (!File.Exists(outputDir + "cetk"))
             {
                 //Download cetk
@@ -333,7 +334,7 @@ namespace libWiiSharp
                     flag3 = false;
                 }
             }
-
+            
 
             FireProgress(10);
             FireDebug("   Parsing TMD...");
