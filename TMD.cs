@@ -318,12 +318,12 @@ namespace libWiiSharp
                 string path = str1 + str2 + str3 + ".app";
                 conts[index] = File.ReadAllBytes(path);
             }
-            UpdateContents(conts);
+            UpdateContentsBytes(conts);
         }
 
         public void UpdateContents(byte[][] contents)
         {
-            UpdateContents(contents);
+            UpdateContentsBytes(contents);
         }
 
         public string GetUpperTitleID()
@@ -491,8 +491,7 @@ namespace libWiiSharp
             FireDebug("Writing TMD Finished...");
         }
 
-        /*
-        private void PrivUpdateContents(byte[][] conts)
+        private void UpdateContentsBytes(byte[][] conts)
         {
             SHA1 shA1 = SHA1.Create();
             for (int index = 0; index < this.contents.Count; ++index)
@@ -502,7 +501,6 @@ namespace libWiiSharp
             }
             shA1.Clear();
         }
-        */
 
         private void ParseTmd(Stream tmdFile)
         {
