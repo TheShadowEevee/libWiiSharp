@@ -89,7 +89,7 @@ namespace libWiiSharp
         public bool HasLoop
         {
             get => bnsInfo.HasLoop == 1;
-            set => bnsInfo.HasLoop = value ? 1 : 0;
+            set => bnsInfo.HasLoop = (byte)(value ? 1 : 0);
         }
 
         /// <summary>
