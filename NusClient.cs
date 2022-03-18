@@ -1,6 +1,6 @@
 ﻿/* This file is part of libWiiSharp
  * Copyright (C) 2009 Leathl
- * Copyright (C) 2020 - 2021 Github Contributors
+ * Copyright (C) 2020 - 2022 TheShadowEevee, Github Contributors
  * 
  * libWiiSharp is free software: you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as published
@@ -36,7 +36,9 @@ namespace libWiiSharp
     public class NusClient : IDisposable
     {
         private const string nusUrl = "http://nus.cdn.shop.wii.com/ccs/download/";
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
         private readonly WebClient wcNus = new WebClient();
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
         private bool useLocalFiles;
         private bool continueWithoutTicket;
         private bool isDisposed;
@@ -182,7 +184,6 @@ namespace libWiiSharp
             if (!File.Exists("cetk") && !continueWithoutTicket)
             {
                 FireDebug("   Downloading Ticket...");
-                Console.WriteLine("Downloading");
                 try
                 {
                     byte[] tikArray = wcNus.DownloadData(str2 + "cetk");
@@ -193,7 +194,6 @@ namespace libWiiSharp
                     throw new Exception("CETK Doesn't Exist and Downloading Ticket Failed:\n" + ex.Message);
                 }
             }
-            Console.WriteLine("Continuing");
             FireDebug("Parsing Ticket...");
             Ticket tik = Ticket.Load("cetk");
             FireProgress(40);
@@ -474,6 +474,7 @@ namespace libWiiSharp
             byte[] bytes = BitConverter.GetBytes(tmd.Contents[contentIndex].Index);
             numArray[0] = bytes[1];
             numArray[1] = bytes[0];
+#pragma warning disable SYSLIB0022 // Type or member is obsolete
             RijndaelManaged rijndaelManaged = new RijndaelManaged
             {
                 Mode = CipherMode.CBC,
@@ -483,6 +484,7 @@ namespace libWiiSharp
                 Key = titleKey,
                 IV = numArray
             };
+#pragma warning restore SYSLIB0022 // Type or member is obsolete
             ICryptoTransform decryptor = rijndaelManaged.CreateDecryptor();
             MemoryStream memoryStream = new MemoryStream(content);
             CryptoStream cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read);

@@ -1,6 +1,6 @@
 ﻿/* This file is part of libWiiSharp
  * Copyright (C) 2009 Leathl
- * Copyright (C) 2020 - 2021 Github Contributors
+ * Copyright (C) 2020 - 2022 TheShadowEevee, Github Contributors
  * 
  * libWiiSharp is free software: you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as published
@@ -1007,6 +1007,7 @@ namespace libWiiSharp
             byte[] bytes = BitConverter.GetBytes(tmd.Contents[contentIndex].Index);
             numArray[0] = bytes[1];
             numArray[1] = bytes[0];
+#pragma warning disable SYSLIB0022 // Type or member is obsolete
             RijndaelManaged rijndaelManaged = new RijndaelManaged
             {
                 Mode = CipherMode.CBC,
@@ -1016,6 +1017,7 @@ namespace libWiiSharp
                 Key = titleKey,
                 IV = numArray
             };
+#pragma warning restore SYSLIB0022 // Type or member is obsolete
             ICryptoTransform decryptor = rijndaelManaged.CreateDecryptor();
             MemoryStream memoryStream = new MemoryStream(content);
             CryptoStream cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read);
@@ -1034,6 +1036,7 @@ namespace libWiiSharp
             byte[] bytes = BitConverter.GetBytes(tmd.Contents[contentIndex].Index);
             numArray[0] = bytes[1];
             numArray[1] = bytes[0];
+#pragma warning disable SYSLIB0022 // Type or member is obsolete
             RijndaelManaged rijndaelManaged = new RijndaelManaged
             {
                 Mode = CipherMode.CBC,
@@ -1043,6 +1046,7 @@ namespace libWiiSharp
                 Key = titleKey,
                 IV = numArray
             };
+#pragma warning restore SYSLIB0022 // Type or member is obsolete
             ICryptoTransform encryptor = rijndaelManaged.CreateEncryptor();
             MemoryStream memoryStream = new MemoryStream(content);
             CryptoStream cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Read);

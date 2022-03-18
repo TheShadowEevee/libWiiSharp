@@ -3,10 +3,11 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <LangVersion>latest</LangVersion>
     <OutputType>Library</OutputType>
-    <ApplicationVersion>0.4.0.0</ApplicationVersion>
+    <ApplicationVersion>0.6.0.0</ApplicationVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+    <Nullable>annotations</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <RegisterForComInterop>true</RegisterForComInterop>
@@ -18,12 +19,9 @@
     <Content Include=".gitignore" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.310801">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
+    <Compile Remove="Log.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="Log.cs" />
+    <PackageReference Include="SkiaSharp" Version="2.80.3" />
   </ItemGroup>
 </Project>

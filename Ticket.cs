@@ -1,6 +1,6 @@
 ﻿/* This file is part of libWiiSharp
  * Copyright (C) 2009 Leathl
- * Copyright (C) 2020 - 2021 Github Contributors
+ * Copyright (C) 2020 - 2022 TheShadowEevee, Github Contributors
  * 
  * libWiiSharp is free software: you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as published
@@ -489,6 +489,7 @@ namespace libWiiSharp
             byte[] numArray = commonKeyIndex == 1 ? CommonKey.GetKoreanKey() : CommonKey.GetStandardKey();
             byte[] bytes = BitConverter.GetBytes(Shared.Swap(titleId));
             Array.Resize<byte>(ref bytes, 16);
+#pragma warning disable SYSLIB0022 // Type or member is obsolete
             RijndaelManaged rijndaelManaged = new RijndaelManaged
             {
                 Mode = CipherMode.CBC,
@@ -498,6 +499,7 @@ namespace libWiiSharp
                 Key = numArray,
                 IV = bytes
             };
+#pragma warning restore SYSLIB0022 // Type or member is obsolete
             ICryptoTransform decryptor = rijndaelManaged.CreateDecryptor();
             MemoryStream memoryStream = new MemoryStream(encryptedTitleKey);
             CryptoStream cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read);
@@ -514,6 +516,7 @@ namespace libWiiSharp
             byte[] numArray = commonKeyIndex == 1 ? CommonKey.GetKoreanKey() : CommonKey.GetStandardKey();
             byte[] bytes = BitConverter.GetBytes(Shared.Swap(titleId));
             Array.Resize<byte>(ref bytes, 16);
+#pragma warning disable SYSLIB0022 // Type or member is obsolete
             RijndaelManaged rijndaelManaged = new RijndaelManaged
             {
                 Mode = CipherMode.CBC,
@@ -523,6 +526,7 @@ namespace libWiiSharp
                 Key = numArray,
                 IV = bytes
             };
+#pragma warning restore SYSLIB0022 // Type or member is obsolete
             ICryptoTransform encryptor = rijndaelManaged.CreateEncryptor();
             MemoryStream memoryStream = new MemoryStream(decryptedTitleKey);
             CryptoStream cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Read);
