@@ -35,7 +35,7 @@ namespace libWiiSharp
 
     public class NusClient : IDisposable
     {
-        private const string nusUrl = "http://nus.cdn.shop.wii.com/ccs/download/";
+        private const string nusUrl = "http://ccs.cdn.wup.shop.nintendo.net/ccs/download/";
 #pragma warning disable SYSLIB0014 // Type or member is obsolete
         private readonly WebClient wcNus = new WebClient();
 #pragma warning restore SYSLIB0014 // Type or member is obsolete
