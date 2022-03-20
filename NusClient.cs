@@ -148,11 +148,7 @@ namespace libWiiSharp
             contentId = num.ToString("x8");
             FireDebug("Downloading Content (Content ID: {0}) of Title {1} v{2}...", contentId, titleId, string.IsNullOrEmpty(titleVersion) ? "[Latest]" : titleVersion);
             FireDebug("   Checking for Internet connection...");
-            if (!PrivCheckInet())
-            {
-                FireDebug("   Connection not found...");
-                throw new Exception("You're not connected to the internet!");
-            }
+            string nusUrl = PrivNUSUp();
             FireProgress(0);
             string str1 = "tmd" + (string.IsNullOrEmpty(titleVersion) ? string.Empty : "." + titleVersion);
             string str2 = string.Format("{0}{1}/", nusUrl, titleId);
@@ -215,10 +211,7 @@ namespace libWiiSharp
 
         private Ticket PrivDownloadTicket(string titleId)
         {
-            if (!PrivCheckInet())
-            {
-                throw new Exception("You're not connected to the internet!");
-            }
+            string nusUrl = PrivNUSUp();
 
             string titleUrl = string.Format("{0}{1}/", nusUrl, titleId);
             byte[] tikArray = wcNus.DownloadData(titleUrl + "cetk");
@@ -228,10 +221,7 @@ namespace libWiiSharp
 
         private TMD PrivDownloadTmd(string titleId, string titleVersion)
         {
-            if (!PrivCheckInet())
-            {
-                throw new Exception("You're not connected to the internet!");
-            }
+            string nusUrl = PrivNUSUp();
 
             return TMD.Load(wcNus.DownloadData(string.Format("{0}{1}/", nusUrl, titleId) + ("tmd" + (string.IsNullOrEmpty(titleVersion) ? string.Empty : "." + titleVersion))));
         }
@@ -248,6 +238,8 @@ namespace libWiiSharp
                 FireDebug("  No store types were defined...");
                 throw new Exception("You must at least define one store type!");
             }
+            FireDebug("   Checking for Internet connection...");
+            string nusUrl = PrivNUSUp();
             string str1 = string.Format("{0}{1}/", nusUrl, titleId);
             bool flag1 = false;
             bool flag2 = false;
@@ -284,12 +276,6 @@ namespace libWiiSharp
                 flag2 = false;
                 flag1 = true;
                 flag3 = false;
-            }
-            FireDebug("   Checking for Internet connection...");
-            if (!PrivCheckInet())
-            {
-                FireDebug("   Connection not found...");
-                throw new Exception("You're not connected to the internet!");
             }
             if (outputDir[outputDir.Length - 1] != Path.DirectorySeparatorChar)
             {
@@ -493,6 +479,74 @@ namespace libWiiSharp
             cryptoStream.Dispose();
             memoryStream.Dispose();
             return buffer;
+        }
+
+        private string PrivNUSUp()
+        {
+            if (!PrivCheckInet())
+            {
+                FireDebug("   Connection not found...");
+                throw new Exception("You're not connected to the internet!");
+            }
+
+            const string WiiEndpoint = "http://nus.cdn.shop.wii.com/ccs/download/";
+            const string WiiUEndpoint = "http://ccs.cdn.wup.shop.nintendo.net/ccs/download/";
+            const string DSiEndpoint = "http://nus.cdn.t.shop.nintendowifi.net/ccs/download/";
+            const string RC24Endpoint = "http://ccs.cdn.sho.rc24.xyz/ccs/download/";
+
+            // Wii Endpoint
+            try
+            {
+                wcNus.DownloadData(WiiEndpoint);
+
+            } catch (WebException e)
+            {
+                if (e.Message.Split('(')[1].Split(')')[0] == "401")
+                {
+                    return WiiEndpoint;
+                }
+            }
+
+            // WiiU Endpoint
+            try
+            {
+                wcNus.DownloadData(WiiUEndpoint);
+            }
+            catch (WebException e)
+            {
+                if (e.Message.Split('(')[1].Split(')')[0] == "401")
+                {
+                    return WiiUEndpoint;
+                }
+            }
+
+            // DSi Endpoint
+            try
+            {
+                wcNus.DownloadData(DSiEndpoint);
+            }
+            catch (WebException e)
+            {
+                if (e.Message.Split('(')[1].Split(')')[0] == "401")
+                {
+                    return DSiEndpoint;
+                }
+            }
+
+            // RC24 Endpoint
+            try
+            {
+                wcNus.DownloadData(RC24Endpoint);
+            }
+            catch (WebException e)
+            {
+                if (e.Message.Split('(')[1].Split(')')[0] == "401")
+                {
+                    return RC24Endpoint;
+                }
+            }
+
+            throw new Exception("Unable to verify any online NUS server!");
         }
 
         private bool PrivCheckInet()
