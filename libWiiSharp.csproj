@@ -5,8 +5,6 @@
     <OutputType>Library</OutputType>
     <ApplicationVersion>0.6.0.0</ApplicationVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <UseWindowsForms>true</UseWindowsForms>
-    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <Nullable>annotations</Nullable>
   </PropertyGroup>
   <ItemGroup>
