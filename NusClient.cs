@@ -155,7 +155,7 @@ namespace libWiiSharp
             }
             FireProgress(0);
             string str1 = "tmd" + (string.IsNullOrEmpty(titleVersion) ? string.Empty : "." + titleVersion);
-            string str2 = string.Format("{0}{1}/", "http://nus.cdn.shop.wii.com/ccs/download/", titleId);
+            string str2 = string.Format("{0}{1}/", nusUrl, titleId);
             string empty = string.Empty;
             int contentIndex = 0;
             FireDebug("   Downloading TMD...");
@@ -233,7 +233,7 @@ namespace libWiiSharp
                 throw new Exception("You're not connected to the internet!");
             }
 
-            return TMD.Load(wcNus.DownloadData(string.Format("{0}{1}/", "http://nus.cdn.shop.wii.com/ccs/download/", titleId) + ("tmd" + (string.IsNullOrEmpty(titleVersion) ? string.Empty : "." + titleVersion))));
+            return TMD.Load(wcNus.DownloadData(string.Format("{0}{1}/", nusUrl, titleId) + ("tmd" + (string.IsNullOrEmpty(titleVersion) ? string.Empty : "." + titleVersion))));
         }
 
         private void PrivDownloadTitle(
@@ -248,7 +248,7 @@ namespace libWiiSharp
                 FireDebug("  No store types were defined...");
                 throw new Exception("You must at least define one store type!");
             }
-            string str1 = string.Format("{0}{1}/", "http://nus.cdn.shop.wii.com/ccs/download/", titleId);
+            string str1 = string.Format("{0}{1}/", nusUrl, titleId);
             bool flag1 = false;
             bool flag2 = false;
             bool flag3 = false;
