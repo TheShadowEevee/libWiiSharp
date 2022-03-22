@@ -16,8 +16,6 @@ Some modifications have been pulled from many different mods of libWiiSharp in o
 libWiiSharp is released under the terms of the GNU General Public License v3.
 See the LICENSE file for more info
 
-TPL code uses SkiaSharp, which is released under the MIT License. See the Licenses folder for information.
-
 ## Credits
 From the original libWiiSharp:
 - Xuzz, SquidMan, megazig, Matt_P, Omega and The Lemon Man for Wii.py
