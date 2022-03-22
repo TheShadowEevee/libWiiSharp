@@ -20,9 +20,10 @@
 //Zetsubou by SquidMan was also a reference.
 //Thanks to the authors!
 
-using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 
@@ -146,11 +147,11 @@ namespace libWiiSharp
         }
 
         public static TPL FromImage(
-          SKBitmap img,
+          Image img,
           TPL_TextureFormat tplFormat,
           TPL_PaletteFormat paletteFormat = TPL_PaletteFormat.RGB5A3)
         {
-            return FromImages(new SKBitmap[1] { img }, new TPL_TextureFormat[1]
+            return FromImages(new Image[1] { img }, new TPL_TextureFormat[1]
             {
         tplFormat
             }, new TPL_PaletteFormat[1] { paletteFormat });
@@ -166,10 +167,10 @@ namespace libWiiSharp
                 throw new Exception("You must specify a format for each image!");
             }
 
-            List<SKBitmap> imageList = new List<SKBitmap>();
+            List<Image> imageList = new List<Image>();
             foreach (string imagePath in imagePaths)
             {
-                imageList.Add(SKBitmap.Decode(imagePath));
+                imageList.Add(Image.FromFile(imagePath));
             }
 
             TPL tpl = new TPL();
@@ -178,7 +179,7 @@ namespace libWiiSharp
         }
 
         public static TPL FromImages(
-          SKBitmap[] images,
+          Image[] images,
           TPL_TextureFormat[] tplFormats,
           TPL_PaletteFormat[] paletteFormats)
         {
@@ -239,11 +240,11 @@ namespace libWiiSharp
         }
 
         public void CreateFromImage(
-          SKBitmap img,
+          Image img,
           TPL_TextureFormat tplFormat,
           TPL_PaletteFormat paletteFormat = TPL_PaletteFormat.RGB5A3)
         {
-            PrivCreateFromImages(new SKBitmap[1] { img }, new TPL_TextureFormat[1]
+            PrivCreateFromImages(new Image[1] { img }, new TPL_TextureFormat[1]
             {
         tplFormat
             }, new TPL_PaletteFormat[1] { paletteFormat });
@@ -259,17 +260,17 @@ namespace libWiiSharp
                 throw new Exception("You must specify a format for each image!");
             }
 
-            List<SKBitmap> imageList = new List<SKBitmap>();
+            List<Image> imageList = new List<Image>();
             foreach (string imagePath in imagePaths)
             {
-                imageList.Add(SKBitmap.Decode(imagePath));
+                imageList.Add(Image.FromFile(imagePath));
             }
 
             PrivCreateFromImages(imageList.ToArray(), tplFormats, paletteFormats);
         }
 
         public void CreateFromImages(
-          SKBitmap[] images,
+          Image[] images,
           TPL_TextureFormat[] tplFormats,
           TPL_PaletteFormat[] paletteFormats)
         {
@@ -321,12 +322,12 @@ namespace libWiiSharp
             return ToMemoryStream().ToArray();
         }
 
-        public SKBitmap ExtractTexture()
+        public Image ExtractTexture()
         {
             return ExtractTexture(0);
         }
 
-        public SKBitmap ExtractTexture(int index)
+        public Image ExtractTexture(int index)
         {
             byte[] data = tplTextureHeaders[index].TextureFormat switch
             {
@@ -358,51 +359,32 @@ namespace libWiiSharp
                 File.Delete(savePath);
             }
 
-            SKBitmap texture = ExtractTexture(index);
+            Image texture = ExtractTexture(index);
             switch (Path.GetExtension(savePath).ToLower())
             {
-                case ".webp":
-                    SKData webp = SKImage.FromBitmap(texture).Encode(SKEncodedImageFormat.Webp, 100);
-                    using (var filestream = File.OpenWrite(savePath))
-                    {
-                        webp.SaveTo(filestream);
-                    }
+                case ".tif":
+                case ".tiff":
+                    texture.Save(savePath, ImageFormat.Tiff);
                     break;
                 case ".bmp":
-                    SKData bmp = SKImage.FromBitmap(texture).Encode(SKEncodedImageFormat.Bmp, 100);
-                    using (var filestream = File.OpenWrite(savePath))
-                    {
-                        bmp.SaveTo(filestream);
-                    }
+                    texture.Save(savePath, ImageFormat.Bmp);
                     break;
                 case ".gif":
-                    SKData gif = SKImage.FromBitmap(texture).Encode(SKEncodedImageFormat.Gif, 100);
-                    using (var filestream = File.OpenWrite(savePath))
-                    {
-                        gif.SaveTo(filestream);
-                    }
+                    texture.Save(savePath, ImageFormat.Gif);
                     break;
                 case ".jpg":
                 case ".jpeg":
-                    SKData jpeg = SKImage.FromBitmap(texture).Encode(SKEncodedImageFormat.Jpeg, 100);
-                    using (var filestream = File.OpenWrite(savePath))
-                    {
-                        jpeg.SaveTo(filestream);
-                    }
+                    texture.Save(savePath, ImageFormat.Jpeg);
                     break;
                 default:
-                    SKData png = SKImage.FromBitmap(texture).Encode(SKEncodedImageFormat.Png, 100);
-                    using (var filestream = File.OpenWrite(savePath))
-                    {
-                        png.SaveTo(filestream);
-                    }
+                    texture.Save(savePath, ImageFormat.Png);
                     break;
             }
         }
 
-        public SKBitmap[] ExtractAllTextures()
+        public Image[] ExtractAllTextures()
         {
-            List<SKBitmap> imageList = new List<SKBitmap>();
+            List<Image> imageList = new List<Image>();
             for (int index = 0; index < tplHeader.NumOfTextures; ++index)
             {
                 imageList.Add(ExtractTexture(index));
@@ -429,10 +411,10 @@ namespace libWiiSharp
           TPL_TextureFormat tplFormat,
           TPL_PaletteFormat paletteFormat = TPL_PaletteFormat.RGB5A3)
         {
-            AddTexture(SKBitmap.Decode(imagePath), tplFormat, paletteFormat);
+            AddTexture(Image.FromFile(imagePath), tplFormat, paletteFormat);
         }
 
-        public void AddTexture(SKBitmap img, TPL_TextureFormat tplFormat, TPL_PaletteFormat paletteFormat = TPL_PaletteFormat.RGB5A3)
+        public void AddTexture(Image img, TPL_TextureFormat tplFormat, TPL_PaletteFormat paletteFormat = TPL_PaletteFormat.RGB5A3)
         {
             TPL_TextureEntry tplTextureEntry = new TPL_TextureEntry();
             TPL_TextureHeader tplTextureHeader = new TPL_TextureHeader();
@@ -483,10 +465,10 @@ namespace libWiiSharp
             return (TPL_PaletteFormat)tplPaletteHeaders[index].PaletteFormat;
         }
 
-        /*public Size GetTextureSize(int index)
+        public Size GetTextureSize(int index)
         {
             return new Size(tplTextureHeaders[index].TextureWidth, tplTextureHeaders[index].TextureHeight);
-        }*/
+        }
 
         private void WriteToStream(Stream writeStream)
         {
@@ -675,7 +657,7 @@ namespace libWiiSharp
         }
 
         private void PrivCreateFromImages(
-          SKBitmap[] images,
+          Image[] images,
           TPL_TextureFormat[] tplFormats,
           TPL_PaletteFormat[] paletteFormats)
         {
@@ -688,7 +670,7 @@ namespace libWiiSharp
             tplHeader.NumOfTextures = (uint)images.Length;
             for (int index = 0; index < images.Length; ++index)
             {
-                SKBitmap image = images[index];
+                Image image = images[index];
                 TPL_TextureEntry tplTextureEntry = new TPL_TextureEntry();
                 TPL_TextureHeader tplTextureHeader = new TPL_TextureHeader();
                 TPL_PaletteHeader tplPaletteHeader = new TPL_PaletteHeader();
@@ -713,30 +695,33 @@ namespace libWiiSharp
             }
         }
 
-        private byte[] ImageToTpl(SKBitmap img, TPL_TextureFormat tplFormat)
+        private byte[] ImageToTpl(Image img, TPL_TextureFormat tplFormat)
         {
             return tplFormat switch
             {
-                TPL_TextureFormat.I4 => ToI4(img),
-                TPL_TextureFormat.I8 => ToI8(img),
-                TPL_TextureFormat.IA4 => ToIA4(img),
-                TPL_TextureFormat.IA8 => ToIA8(img),
-                TPL_TextureFormat.RGB565 => ToRGB565(img),
-                TPL_TextureFormat.RGB5A3 => ToRGB5A3(img),
-                TPL_TextureFormat.RGBA8 => ToRGBA8(img),
+                TPL_TextureFormat.I4 => ToI4((Bitmap)img),
+                TPL_TextureFormat.I8 => ToI8((Bitmap)img),
+                TPL_TextureFormat.IA4 => ToIA4((Bitmap)img),
+                TPL_TextureFormat.IA8 => ToIA8((Bitmap)img),
+                TPL_TextureFormat.RGB565 => ToRGB565((Bitmap)img),
+                TPL_TextureFormat.RGB5A3 => ToRGB5A3((Bitmap)img),
+                TPL_TextureFormat.RGBA8 => ToRGBA8((Bitmap)img),
                 TPL_TextureFormat.CI4 or TPL_TextureFormat.CI8 or TPL_TextureFormat.CI14X2 => new byte[0],
                 _ => throw new FormatException("Format not supported!\nCurrently, images can only be converted to the following formats:\nI4, I8, IA4, IA8, RGB565, RGB5A3, RGBA8, CI4, CI8 , CI14X2."),
             };
         }
 
-        private uint[] ImageToRgba(SKBitmap bitmap)
+        private uint[] ImageToRgba(Image img)
         {
-            byte[] numArray = new byte[bitmap.Height * (Math.Abs(bitmap.Width) * 4)];
-            Marshal.Copy(bitmap.GetAddress(0, 0), numArray, 0, numArray.Length);
+            Bitmap bitmap = (Bitmap)img;
+            BitmapData bitmapdata = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            byte[] numArray = new byte[bitmapdata.Height * Math.Abs(bitmapdata.Stride)];
+            Marshal.Copy(bitmapdata.Scan0, numArray, 0, numArray.Length);
+            bitmap.UnlockBits(bitmapdata);
             return Shared.ByteArrayToUIntArray(numArray);
         }
 
-        private SKBitmap RgbaToImage(byte[] data, int width, int height)
+        private Bitmap RgbaToImage(byte[] data, int width, int height)
         {
             if (width == 0)
             {
@@ -748,10 +733,12 @@ namespace libWiiSharp
                 height = 1;
             }
 
-            SKBitmap bitmap = new SKBitmap(width, height);
+            Bitmap bitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb);
             try
             {
-                Marshal.Copy(data, 0, bitmap.GetAddress(0, 0), data.Length);
+                BitmapData bitmapdata = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.WriteOnly, bitmap.PixelFormat);
+                Marshal.Copy(data, 0, bitmapdata.Scan0, data.Length);
+                bitmap.UnlockBits(bitmapdata);
                 return bitmap;
             }
             catch
@@ -867,7 +854,7 @@ namespace libWiiSharp
             return Shared.UIntArrayToByteArray(array);
         }
 
-        private byte[] ToRGBA8(SKBitmap img)
+        private byte[] ToRGBA8(Bitmap img)
         {
             uint[] rgba = ImageToRgba(img);
             int width = img.Width;
@@ -972,7 +959,7 @@ namespace libWiiSharp
             return Shared.UIntArrayToByteArray(array);
         }
 
-        private byte[] ToRGB5A3(SKBitmap img)
+        private byte[] ToRGB5A3(Bitmap img)
         {
             uint[] rgba = ImageToRgba(img);
             int width = img.Width;
@@ -1051,7 +1038,7 @@ namespace libWiiSharp
             return Shared.UIntArrayToByteArray(array);
         }
 
-        private byte[] ToRGB565(SKBitmap img)
+        private byte[] ToRGB565(Bitmap img)
         {
             uint[] rgba = ImageToRgba(img);
             int width = img.Width;
@@ -1116,7 +1103,7 @@ namespace libWiiSharp
             return Shared.UIntArrayToByteArray(array);
         }
 
-        private byte[] ToI4(SKBitmap img)
+        private byte[] ToI4(Bitmap img)
         {
             uint[] rgba = ImageToRgba(img);
             int width = img.Width;
@@ -1176,7 +1163,7 @@ namespace libWiiSharp
             return Shared.UIntArrayToByteArray(array);
         }
 
-        private byte[] ToI8(SKBitmap img)
+        private byte[] ToI8(Bitmap img)
         {
             uint[] rgba = ImageToRgba(img);
             int width = img.Width;
@@ -1235,7 +1222,7 @@ namespace libWiiSharp
             return Shared.UIntArrayToByteArray(array);
         }
 
-        private byte[] ToIA4(SKBitmap img)
+        private byte[] ToIA4(Bitmap img)
         {
             uint[] rgba = ImageToRgba(img);
             int width = img.Width;
@@ -1294,7 +1281,7 @@ namespace libWiiSharp
             return Shared.UIntArrayToByteArray(array);
         }
 
-        private byte[] ToIA8(SKBitmap img)
+        private byte[] ToIA8(Bitmap img)
         {
             uint[] rgba = ImageToRgba(img);
             int width = img.Width;
