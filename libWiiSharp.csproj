@@ -1,19 +1,75 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--Project was exported from assembly: C:\Users\theso\Downloads\NCPatcher\pack\libWiiSharp.dll-->
   <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
     <LangVersion>latest</LangVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DA1DDE59-7F59-4EBA-91E9-B06729E8E131}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <ApplicationVersion>0.6.0.0</ApplicationVersion>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Nullable>annotations</Nullable>
+    <AssemblyName>libWiiSharp</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+    <ApplicationVersion>0.4.0.0</ApplicationVersion>
+    <FileAlignment>512</FileAlignment>
+    <RootNamespace>libWiiSharp</RootNamespace>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <RegisterForComInterop>true</RegisterForComInterop>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <RegisterForComInterop>false</RegisterForComInterop>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BNS.cs" />
+    <Compile Include="Brlan.cs" />
+    <Compile Include="Brlyt.cs" />
+    <Compile Include="CertificateChain.cs" />
+    <Compile Include="CommonKey.cs" />
+    <Compile Include="ContentIndices.cs" />
+    <Compile Include="HbcTransmitter.cs" />
+    <Compile Include="Headers.cs" />
+    <Compile Include="HexView.cs" />
+    <Compile Include="IosPatcher.cs" />
+    <Compile Include="Lz77.cs" />
+    <Compile Include="MessageEventArgs.cs" />
+    <Compile Include="NusClient.cs" />
+    <Compile Include="Shared.cs" />
+    <Compile Include="Ticket.cs" />
+    <Compile Include="TMD.cs" />
+    <Compile Include="TPL.cs" />
+    <Compile Include="U8.cs" />
+    <Compile Include="WAD.cs" />
+    <Compile Include="Wave.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Log.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="SkiaSharp" Version="2.80.3" />
-  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
