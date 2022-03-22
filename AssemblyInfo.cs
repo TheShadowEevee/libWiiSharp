@@ -2,11 +2,11 @@
 using System.Resources;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("libWiiSharp_Modified")]
+[assembly: AssemblyTitle("libWiiSharp")]
 [assembly: AssemblyDescription("A wii related .NET library modified to add features for other programs.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Leathl,SC reproductions")]
-[assembly: AssemblyProduct("libWiiSharp_Modified")]
+[assembly: AssemblyCompany("TheShadowEevee")]
+[assembly: AssemblyProduct("libWiiSharp")]
 [assembly: AssemblyCopyright("Copyright © Leathl 2011, Copyright © Github Contributors 2020-2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: ComVisible(true)]
