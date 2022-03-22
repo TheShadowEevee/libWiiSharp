@@ -8,7 +8,7 @@
     <ProjectGuid>{DA1DDE59-7F59-4EBA-91E9-B06729E8E131}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AssemblyName>libWiiSharp</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <ApplicationVersion>0.4.0.0</ApplicationVersion>
     <FileAlignment>512</FileAlignment>
@@ -54,7 +54,6 @@
     <Compile Include="ContentIndices.cs" />
     <Compile Include="HbcTransmitter.cs" />
     <Compile Include="Headers.cs" />
-    <Compile Include="HexView.cs" />
     <Compile Include="IosPatcher.cs" />
     <Compile Include="Lz77.cs" />
     <Compile Include="MessageEventArgs.cs" />
