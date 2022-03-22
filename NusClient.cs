@@ -62,11 +62,8 @@ namespace libWiiSharp
             get => continueWithoutTicket;
             set => continueWithoutTicket = value;
         }
-
-        public event EventHandler<ProgressChangedEventArgs> Progress;
-
-        public event EventHandler<MessageEventArgs> Debug;
-
+        
+        #region IDisposable Members
         ~NusClient() => Dispose(false);
 
         public void Dispose()
@@ -84,7 +81,17 @@ namespace libWiiSharp
 
             isDisposed = true;
         }
+        #endregion
 
+        #region Public Functions
+        /// <summary>
+        /// Grabs a title from NUS, you can define several store types.
+        /// Leave the title version empty for the latest.
+        /// </summary>
+        /// <param name="titleId"></param>
+        /// <param name="titleVersion"></param>
+        /// <param name="outputDir"></param>
+        /// <param name="storeTypes"></param>
         public void DownloadTitle(string titleId, string titleVersion, string outputDir, params StoreType[] storeTypes)
         {
             if (titleId.Length != 16)
@@ -96,6 +103,16 @@ namespace libWiiSharp
             PrivDownloadTitle(titleId, titleVersion, outputDir, storeTypes);
         }
 
+        /// <summary>
+        /// Grabs a title from NUS, you can define several store types.
+        /// Leave the title version empty for the latest.
+        /// nusUrl should be formatted as "http://x.y.z.host.com/ccs/download/"
+        /// </summary>
+        /// <param name="titleId"></param>
+        /// <param name="titleVersion"></param>
+        /// <param name="outputDir"></param>
+        /// <param name="nusUrl"></param>
+        /// <param name="storeTypes"></param>
         public void DownloadTitle(string titleId, string titleVersion, string outputDir, string nusUrl, params StoreType[] storeTypes)
         {
             if (titleId.Length != 16)
@@ -107,30 +124,66 @@ namespace libWiiSharp
             PrivDownloadTitle(titleId, titleVersion, outputDir, nusUrl, storeTypes);
         }
 
+        /// <summary>
+        /// Grabs a TMD from NUS.
+        /// Leave the title version empty for the latest.
+        /// </summary>
+        /// <param name="titleId"></param>
+        /// <param name="titleVersion"></param>
+        /// <returns></returns>
         public TMD DownloadTMD(string titleId, string titleVersion)
         {
             if (isStopRequired) return null;
             return titleId.Length == 16 ? PrivDownloadTmd(titleId, titleVersion) : throw new Exception("Title ID must be 16 characters long!");
         }
 
+        /// <summary>
+        /// Grabs a TMD from NUS.
+        /// Leave the title version empty for the latest.
+        /// nusUrl should be formatted as "http://x.y.z.host.com/ccs/download/"
+        /// </summary>
+        /// <param name="titleId"></param>
+        /// <param name="titleVersion"></param>
+        /// <param name="nusUrl"></param>
+        /// <returns></returns>
         public TMD DownloadTMD(string titleId, string titleVersion, string nusUrl)
         {
             if (isStopRequired) return null;
             return titleId.Length == 16 ? PrivDownloadTmd(titleId, titleVersion, nusUrl) : throw new Exception("Title ID must be 16 characters long!");
         }
 
+        /// <summary>
+        /// Grabs a Ticket from NUS.
+        /// </summary>
+        /// <param name="titleId"></param>
+        /// <returns></returns>
         public Ticket DownloadTicket(string titleId)
         {
             if (isStopRequired) return null;
             return titleId.Length == 16 ? PrivDownloadTicket(titleId) : throw new Exception("Title ID must be 16 characters long!");
         }
 
+        /// <summary>
+        /// Grabs a Ticket from NUS.
+        /// nusUrl should be formatted as "http://x.y.z.host.com/ccs/download/"
+        /// </summary>
+        /// <param name="titleId"></param>
+        /// <param name="nusUrl"></param>
+        /// <returns></returns>
         public Ticket DownloadTicket(string titleId, string nusUrl)
         {
             if (isStopRequired) return null;
             return titleId.Length == 16 ? PrivDownloadTicket(titleId, nusUrl) : throw new Exception("Title ID must be 16 characters long!");
         }
 
+        /// <summary>
+        /// Grabs a single content file and decrypts it.        
+        /// Leave the title version empty for the latest. 
+        /// </summary>
+        /// <param name="titleId"></param>
+        /// <param name="titleVersion"></param>
+        /// <param name="contentId"></param>
+        /// <returns></returns>
         public byte[] DownloadSingleContent(string titleId, string titleVersion, string contentId)
         {
             if (isStopRequired) return null;
@@ -142,6 +195,14 @@ namespace libWiiSharp
             return PrivDownloadSingleContent(titleId, titleVersion, contentId);
         }
 
+        /// <summary>
+        /// Grabs a single content file and decrypts it.        
+        /// Leave the title version empty for the latest. 
+        /// </summary>
+        /// <param name="titleId"></param>
+        /// <param name="titleVersion"></param>
+        /// <param name="contentId"></param>
+        /// <param name="savePath"></param>
         public void DownloadSingleContent(string titleId, string titleVersion, string contentId, string savePath)
         {
             if (titleId.Length != 16)
@@ -163,6 +224,16 @@ namespace libWiiSharp
             File.WriteAllBytes(savePath, bytes);
         }
 
+        /// <summary>
+        /// Grabs a single content file and decrypts it.        
+        /// Leave the title version empty for the latest. 
+        /// nusUrl should be formatted as "http://x.y.z.host.com/ccs/download/"
+        /// </summary>
+        /// <param name="titleId"></param>
+        /// <param name="titleVersion"></param>
+        /// <param name="contentId"></param>
+        /// <param name="savePath"></param>
+        /// <param name="nusUrl"></param>
         public void DownloadSingleContent(string titleId, string titleVersion, string contentId, string savePath, string nusUrl)
         {
             if (titleId.Length != 16)
@@ -183,7 +254,9 @@ namespace libWiiSharp
             byte[] bytes = PrivDownloadSingleContent(titleId, titleVersion, contentId, nusUrl);
             File.WriteAllBytes(savePath, bytes);
         }
+        #endregion
 
+        #region Private Functions
         private byte[] PrivDownloadSingleContent(string titleId, string titleVersion, string contentId)
         {
             uint num = uint.Parse(contentId, NumberStyles.HexNumber);
@@ -952,6 +1025,28 @@ namespace libWiiSharp
                 return false;
             }
         }
+        #endregion
+
+        #region Events
+        /// <summary>
+        /// Fires the Progress of various operations
+        /// </summary>
+        public event EventHandler<ProgressChangedEventArgs> Progress;
+        /// <summary>
+        /// Fires debugging messages. You may write them into a log file or log textbox.
+        /// </summary>
+        public event EventHandler<MessageEventArgs> Debug;
+
+        private void FireProgress(int progressPercentage)
+        {
+            EventHandler<ProgressChangedEventArgs> progress = Progress;
+            if (progress == null)
+            {
+                return;
+            }
+
+            progress(new object(), new ProgressChangedEventArgs(progressPercentage, string.Empty));
+        }
 
         private void FireDebug(string debugMessage, params object[] args)
         {
@@ -964,15 +1059,6 @@ namespace libWiiSharp
             debug(new object(), new MessageEventArgs(string.Format(debugMessage, args)));
         }
 
-        private void FireProgress(int progressPercentage)
-        {
-            EventHandler<ProgressChangedEventArgs> progress = Progress;
-            if (progress == null)
-            {
-                return;
-            }
-
-            progress(new object(), new ProgressChangedEventArgs(progressPercentage, string.Empty));
-        }
+        #endregion
     }
 }
