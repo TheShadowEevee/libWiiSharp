@@ -710,7 +710,7 @@ namespace libWiiSharp
                     int num3 = u8Nodes.Count + 2;
                     for (int index2 = 0; index2 < dirContent.Length; ++index2)
                     {
-                        if (dirContent[index2].Contains(dirContent[index1] + "\\"))
+                        if (dirContent[index2].Contains(dirContent[index1] + Path.DirectorySeparatorChar))
                         {
                             ++num3;
                         }
