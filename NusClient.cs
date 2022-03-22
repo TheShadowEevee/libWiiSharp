@@ -41,6 +41,9 @@ namespace libWiiSharp
         private bool useLocalFiles;
         private bool continueWithoutTicket;
         private bool isDisposed;
+        private volatile bool isStopRequired;
+
+        public void IsStopRequired(bool isStopRequired) => this.isStopRequired = isStopRequired;
 
         /// <summary>
         /// If true, existing local files will be used.
@@ -90,6 +93,7 @@ namespace libWiiSharp
         {
             if (titleId.Length != 16)
             {
+                if (isStopRequired) return;
                 throw new Exception("Title ID must be 16 characters long!");
             }
 
@@ -98,16 +102,19 @@ namespace libWiiSharp
 
         public TMD DownloadTMD(string titleId, string titleVersion)
         {
+            if (isStopRequired) return null;
             return titleId.Length == 16 ? PrivDownloadTmd(titleId, titleVersion) : throw new Exception("Title ID must be 16 characters long!");
         }
 
         public Ticket DownloadTicket(string titleId)
         {
+            if (isStopRequired) return null;
             return titleId.Length == 16 ? PrivDownloadTicket(titleId) : throw new Exception("Title ID must be 16 characters long!");
         }
 
         public byte[] DownloadSingleContent(string titleId, string titleVersion, string contentId)
         {
+            if (isStopRequired) return null;
             if (titleId.Length != 16)
             {
                 throw new Exception("Title ID must be 16 characters long!");
@@ -153,6 +160,11 @@ namespace libWiiSharp
             string str2 = string.Format("{0}{1}/", nusUrl, titleId);
             string empty = string.Empty;
             int contentIndex = 0;
+            if (isStopRequired)
+            {
+                FireDebug("    Stopping...");
+                return null;
+            }
             FireDebug("   Downloading TMD...");
             byte[] tmdFile = wcNus.DownloadData(str2 + str1);
             FireDebug("   Parsing TMD...");
@@ -178,12 +190,17 @@ namespace libWiiSharp
             }
             if (!File.Exists("cetk") && !continueWithoutTicket)
             {
+                if (isStopRequired)
+                {
+                    FireDebug("    Stopping...");
+                    return null;
+                }
                 FireDebug("   Downloading Ticket...");
                 try
                 {
                     byte[] tikArray = wcNus.DownloadData(str2 + "cetk");
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     FireDebug("   Downloading Ticket Failed...");
                     throw new Exception("CETK Doesn't Exist and Downloading Ticket Failed:\n" + ex.Message);
@@ -192,6 +209,11 @@ namespace libWiiSharp
             FireDebug("Parsing Ticket...");
             Ticket tik = Ticket.Load("cetk");
             FireProgress(40);
+            if (isStopRequired)
+            {
+                FireDebug("    Stopping...");
+                return null;
+            }
             FireDebug("   Downloading Content... ({0} bytes)", (object)tmd.Contents[contentIndex].Size);
             byte[] content = wcNus.DownloadData(str2 + empty);
             FireProgress(80);
@@ -298,7 +320,7 @@ namespace libWiiSharp
                 throw new Exception("Downloading TMD Failed:\n" + ex.Message);
             }
 
-            
+
             if (!File.Exists(outputDir + "cetk"))
             {
                 //Download cetk
@@ -319,7 +341,7 @@ namespace libWiiSharp
                     flag3 = false;
                 }
             }
-            
+
 
             FireProgress(10);
             FireDebug("   Parsing TMD...");
@@ -442,7 +464,7 @@ namespace libWiiSharp
             {
                 FireDebug("   Deleting TMD and Ticket...");
                 File.Delete(outputDir + str2);
-                if (ContinueWithoutTicket == false) 
+                if (ContinueWithoutTicket == false)
                 {
                     File.Delete(outputDir + "cetk");
                 }
@@ -498,7 +520,8 @@ namespace libWiiSharp
             {
                 wcNus.DownloadData(WiiEndpoint);
 
-            } catch (WebException e)
+            }
+            catch (WebException e)
             {
                 if (e.Message.Split('(')[1].Split(')')[0] == "401")
                 {
