@@ -3,13 +3,15 @@
 libWiiSharp is a Wii related .NET library running on .Net 6 LTS.
 It can be used with any .NET language to easily develop Wii related applications.
 
+It is possible to compile using .Net Framework 2.0 similar to the original for applications that need it, but .Net 6 is more up to date and secure. If possible use the .Net version over a .Net Framework 2.0 compilation to take advantage of the benifits of .Net.
+
 Originally created by Leathl, The current maintainer of [this repo](https://github.com/TheShadowEevee/libWiiSharp) is [TheShadowEevee](https://github.com/TheShadowEevee).
 
 All public functions are documented and most should be pretty self-explanatory.
 
 If you want to contribute, you can do so at [the github repo](https://github.com/TheShadowEevee/libWiiSharp).
 
-
+Some modifications have been pulled from many different mods of libWiiSharp in order to make a more universal version of the library that doesn't need individual changes. If this version of libWiiSharp fails to replace a different version, open an issue and provide the source code, or if need be the dll, and an attempt will be made to incorporate the custom mod into this version of libWiiSharp.
 
 ## License
 
