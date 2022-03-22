@@ -1,6 +1,6 @@
 # libWiiSharp
 
-libWiiSharp is a Wii related .NET library running on .Net Framework 2.0
+libWiiSharp is a Wii related .NET library running on .Net Framework 2.0.
 It can be used with any .NET language to easily develop Wii related applications.
 
 Originally created by Leathl, The current maintainer of [this repo](https://github.com/TheShadowEevee/libWiiSharp) is [TheShadowEevee](https://github.com/TheShadowEevee).
