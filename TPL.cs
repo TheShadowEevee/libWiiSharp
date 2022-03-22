@@ -20,9 +20,9 @@
 //Zetsubou by SquidMan was also a reference.
 //Thanks to the authors!
 
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using SkiaSharp;
 using System.IO;
 using System.Runtime.InteropServices;
 
@@ -51,7 +51,7 @@ namespace libWiiSharp
         RGB5A3 = 2,
         None = 255, // 0x000000FF
     }
-    
+
     public class TPL : IDisposable
     {
         private TPL_Header tplHeader = new TPL_Header();
